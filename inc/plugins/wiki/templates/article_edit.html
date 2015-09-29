@@ -1,0 +1,36 @@
+<html>
+	<head>
+		<title>{$mybb->settings['bbname']} - {$lang->wiki}</title>
+		{$headerinclude}
+	</head>
+	<body>
+		{$header}
+		<form action="" method="post">
+			<input type="hidden" name="my_post_key" id="my_post_key" value="{$mybb->post_code}" />
+			<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
+				<tr>
+					<td class="thead" colspan="2"><span><strong>{$lang->edit}</td>
+				</tr>
+				<tr>
+					<td class="trow1">
+						<strong>{$lang->content}</strong>
+					</td>
+					<td class="trow1">
+						<textarea rows="20" cols="70" name="message" id="message">{$existing_content}</textarea>
+						{$codebuttons}
+					</td>
+				</tr>
+				<tr>
+					<td class="trow2">
+						<strong>{$lang->notes}</strong>
+					</td>
+					<td class="trow2">
+						<textarea rows="20" cols="70" name="notes" id="notes">{$article['notepad']}</textarea>
+					</td>
+				</tr>
+			</table>
+			<div style="text-align:center"><input type="submit" class="button" value="{$lang->edit}" accesskey="s" /></div>
+		</form>
+		{$footer}
+	</body>
+</html>

@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<title>{$mybb->settings['bbname']} - {$lang->wiki}</title>
+		{$headerinclude}
+	</head>
+	<body>
+		{$header}
+		<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
+			<tr>
+				<td class="thead">
+					<span>
+						<strong>{$wiki['title']}</strong>
+					</span>
+					<span style="float: right;">{$protect_opt} <a href="wiki.php?action=edit&amp;id={$wiki['id']}">{$lang->edit}</a> &bull; <a href="wiki.php?action=diff&amp;aid={$wiki['id']}">{$lang->wiki_revisions}</a> &bull; <a href="wiki.php?action=contributors&amp;id={$wiki['id']}">{$lang->wiki_contributors}</a></span>
+				</td>
+			</tr>
+			{$protectedbit}
+			<tr>
+				<td class="trow1">
+					{$wiki['content']}
+				</td>
+			</tr>
+		</table>
+		{$footer}
+	</body>
+</html>
