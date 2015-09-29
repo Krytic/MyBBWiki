@@ -1,6 +1,6 @@
-# MyBB Wiki Plugin (Beta)
+# MyBB Wiki
 
-MyBB Wiki is a simple, yet functioning, wiki system for users. It integrates with MyBB nicely, and all the relevant information except templates (settings, permissions, etc) is contained in it's own Admin CP module.
+MyBB Wiki is a simple, yet powerful wiki for the [MyBB Forum Software](http://www.mybb.com).
 
 ## Extensibility
 
@@ -10,17 +10,19 @@ MyBB Wiki contains it's own template set, inserted into your themes. It uses def
 
 #### Hooking
 
-Hooks are inserted in various parts of the plugin, all of them are prefixed with "wiki_" so you can easily identify them if you generate a list using something like euantor's [MyBB Hook Finder](https://github.com/euantorano/MyBB-Hook-Finder).
+Hooks are inserted in various parts of the plugin, all of them are prefixed with "wiki_" so you can easily identify them if you generate a list using something like Euan's [MyBB Hook Finder](https://github.com/euantorano/MyBB-Hook-Finder).
 
 #### Languages
 
-There are currently no translations of the Wiki, but I will happily accept any contributions.
+Here is a complete list of translations available for MyBB Wiki:
+
+> English
 
 #### Upgrades
 
-Where possible, upgraders will be run automatically. We do not, however, save backups of wiki articles for you. This must be done with the Import/Export function inside your Admin CP's Wiki module before an upgrade or reinstall. As much as possible is saved in this process.
+Where possible, all upgrade scripts will be run automatically. MyBB Wiki does not, however, save backups of wiki articles for you. This must be done with the Import/Export function inside your Admin CP's Wiki module and on the article list before an upgrade or reinstall. As much as possible is saved in this process.
 
-Upgrades also reset your settings and categories. Exported articles have the category in them and it has not (yet) been tested how the articles react with a non-existant category, but it should be only a minor issue.
+Upgrades also reset your settings and categories. Exported articles have the category in them and it has not (yet) been tested how the articles react with a non-existent category, but it should be only a minor issue.
 
 ## Usage
 
