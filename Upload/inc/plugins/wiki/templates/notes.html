@@ -9,7 +9,7 @@
 			<tr>
 				<td class="thead">
 					<span>
-						<strong>{$wiki['title']}</strong>
+						<strong>{$lang->wiki_talk_prefix}{$wiki['title']}</strong>
 					</span>
 					<span style="float: right;">
 						<a href="wiki.php?action=view&amp;id={$wiki['id']}">{$lang->wiki_view}</a> &bull;
@@ -24,7 +24,7 @@
 			{$protectedbit}
 			<tr>
 				<td class="trow1">
-					{$wiki['content']}
+					{$wiki['notes']}
 				</td>
 			</tr>
 		</table>

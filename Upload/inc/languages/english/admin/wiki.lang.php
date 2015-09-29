@@ -45,7 +45,7 @@ $l['wiki_docs'] = "Documentation";
 $l['wiki_docs_description'] = "How to manage and run the MyBB Wiki on your forum.";
 $l['wiki_intro_body'] = "<h1>Welcome to MyBB Wiki!</h1>Thank you for downloading and installing it, it means a lot to me, as it is my first plugin of substance.";
 $l['wiki_intro_par1'] = "<h2>About</h2>The Wiki Plugins I have seen are usually outdated and/or buggy. That's why I wanted to build this, a simple, extensible wiki with a solid and reliable backend. MyBB Wiki is my view at a wiki. It is very simple without the bells and whistles. It sports MyCode, Article Protection and a dedicated Admin CP Module, from which you can manage articles posted, add categories and read Documentation.";
-$l['wiki_intro_par2'] = "<h2>Updates</h2>For news about updates, you can check out the <a href=\"https://github.com/Seabody/MyBB-Wiki\">GitHub</a> repository or check out the <a href=\"http://community.mybb.com/thread-137015.html\">MyBB Community Thread</a>.<br /><br />You are running version {1}.";
+$l['wiki_intro_par2'] = "<h2>Updates</h2>For news about updates, you can check out the <a href=\"https://github.com/Krytic/MyBB-Wiki\">GitHub</a> repository or check out the <a href=\"http://community.mybb.com/thread-137015.html\">MyBB Community Thread</a>.<br /><br />You are running version {1}.";
 $l['wiki_docs_2'] = "Extensibility";
 $l['wiki_ext_desc'] = "How to extend the Wiki System with your own plugins.";
 $l['wiki_ext_head'] = "<h1>Extensibility</h1>";
@@ -117,14 +117,14 @@ $l['wiki_new_template_done'] = "Your new template has been created successfully.
 $l['wiki_error'] = "An error occured while trying to process your request, please try again later.";
 $l['wiki_error_pc'] = "Post Codes did not match!";
 /* misc */
-$l['wiki_creator'] = "Created by Seabody.";
+$l['wiki_creator'] = "Created by Adamas.";
 $l['wiki_wip'] = "<h1>WIP</h1>";
 $l['wiki_description'] = "Thank you for downloading the MyBB Wiki plugin.";
 $l['wiki_home'] = "Welcome to MyBB Wiki";
 $l['wiki_welcome'] = "<h1>Wiki Admin Control Panel</h1>";
 $l['wiki_total_articles'] = "<h2>{1} article{2}</h2>";
 $l['wiki_total_cats'] = "<h2>{1} categor{2}</h2>";
-$l['wiki_updates'] = "<em>Whilst we work on getting an automatic update scanner working, you can check <a href=\"https://github.com/Seabody/MyBB-Wiki/releases\">here</a>, on GitHub, for new releases.</em>";
+$l['wiki_updates'] = "<em>Whilst we work on getting an automatic update scanner working, you can check <a href=\"https://github.com/Krytic/MyBB-Wiki/releases\">here</a>, on GitHub, for new releases.</em>";
 $l['wiki_updates_header'] = "Updates";
 $l['wiki_check_for_updates'] = "<h2><a href=\"index.php?module=wiki&action=version_check\">Check for updates</a></h2>";
 $l['wiki_version'] = "<h2>Version {1}</h2>";

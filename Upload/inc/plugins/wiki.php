@@ -6,7 +6,7 @@
  * Adds a functioning Wiki to your MyBB Forum
  *
  * @package mybbwiki.zip
- * @author  Seabody
+ * @author  Adamas
  * @license creativecommons.org/licenses/by-nc-sa/3.0/ Creative Commons BY-NC-SA 3.0 Unported
  * @version 1.0
  */
@@ -38,9 +38,9 @@ function wiki_info()
 	return array(
 		'name'          =>  'MyBB Wiki',
 		'description'   =>  "Adds a simple Wiki to your MyBB Forum.{$append}",
-		'website'       =>  'https://github.com/Seabody/MyBB-Wiki" id="mybbwiki',
-		'author'        =>  'Seabody',
-		'authorsite'    =>  'https://github.com/Seabody/MyBB-Wiki',
+		'website'       =>  'https://github.com/Krytic/MyBB-Wiki" id="mybbwiki',
+		'author'        =>  'Adamas',
+		'authorsite'    =>  'https://github.com/Krytic/MyBB-Wiki',
 		'version'       =>  WIKI_VERSION,
 		'guid'          =>  '', // no longer available on MyBB Mods site
 		'compatibility' =>  '18*',

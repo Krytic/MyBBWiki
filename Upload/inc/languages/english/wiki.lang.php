@@ -8,9 +8,11 @@ $l['wiki_revisions'] = "Revisions";
 $l['original'] = "Original";
 $l['current'] = "Current";
 $l['categories'] = "Categories";
-$l['notes'] = "Notepad";
+$l['notes'] = "Talk Page";
 $l['contributors'] = "Contributors to {1}";
 $l['wiki_contributors'] = "Contributors";
+$l['wiki_view'] = "View";
+$l['wiki_talk_prefix'] = "Talk: ";
 /* --- Error Messages --- */
 $l['oops'] = "The Wiki has been disabled!";
 $l['invalid_article'] = "No article exists with that id.";

@@ -163,6 +163,97 @@ elseif($mybb->input['action'] == 'view')
 
 	output_page($page);
 }
+elseif($mybb->input['action'] == 'talk')
+{
+	if(!$permissions['can_view'])
+	{
+		error_no_permission();
+	}
+
+	if(!isset($mybb->input['id']))
+	{
+		error($lang->pickarticle);
+	}
+
+	$id = (int) $mybb->input['id'];
+	$query = $db->write_query(sprintf("SELECT * FROM `%swiki` WHERE `id`='{$id}'", TABLE_PREFIX));
+
+	if($db->num_rows($query) == 0)
+	{
+		error($lang->doesntexist);
+	}
+
+	$wiki = $db->fetch_array($query);
+
+	if($wiki['protected'])
+	{
+		eval("\$protectedbit = \"".$templates->get("wiki_protectedbit")."\";");
+	}
+
+	if($permissions['can_protect'])
+	{
+		eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
+	}
+
+	add_breadcrumb($wiki['title']);
+
+	if($settings['wiki_mybbparser'])
+	{
+		require_once MYBB_ROOT.'inc/class_parser.php';
+
+		$parser = new postParser;
+
+		$use_mycode = 1;
+
+		if($settings['wiki_markdown'])
+		{
+			$use_mycode = 0;
+		}
+
+		$options = array(
+			"allow_html"		=>	(int)$settings['wiki_parse_html'],
+			"filter_badwords"	=>	1,
+			"allow_mycode"		=>	$use_mycode,
+			"allow_smileys"		=>	(int)$settings['wiki_parse_smileys'],
+			"nl2br"				=>	1,
+			"me_username"		=>	0,
+			"allow_imgcode"		=>	$use_mycode);
+
+		$wiki['notepad'] = $parser->parse_message($wiki['notepad'], $options);
+	}
+
+	if($settings['wiki_markdown'])
+	{
+		require_once MYBB_ROOT.'inc/plugins/wiki/markdown/markdown.php';
+
+		$wiki['notepad'] = Markdown($wiki['notepad']);
+	}
+
+	preg_match_all("/(signoff:[0-9]*)/", $wiki['notepad'], $matches);
+
+	foreach($matches[0] as $signoff) {
+		if($signoff == '') {
+			continue;
+		}
+
+		$tmp = preg_match_all("/[0-9]*/", $signoff, $match);
+
+		$uid = $match[0][8];
+
+		$user = get_user($uid);
+
+		$wiki['notepad'] = str_replace("[signoff:{$uid}]", $user['username'], $wiki['notepad']);
+
+	}
+
+	$wiki['notes'] = $wiki['notepad']; // backwards compatibility, will be removed in a future commit
+
+	$plugins->run_hooks("wiki_view_notes");
+
+	eval("\$page = \"".$templates->get("wiki_notes")."\";");
+
+	output_page($page);
+}
 elseif($mybb->input['action'] == 'edit')
 {
 	if(!$permissions['can_edit'])
@@ -250,6 +341,9 @@ elseif($mybb->input['action'] == 'edit')
 		$message = $db->escape_string($mybb->input['message']);
 		$id = (int) $mybb->input['id'];
 		$notes = $db->escape_string($mybb->input['notes']);
+
+		$notes = str_replace("~~~~", "[signoff:{$mybb->user['uid']}]", $notes);
+
 		$sql = $db->write_query(
 			sprintf(
 				"UPDATE `%swiki`
@@ -352,6 +446,8 @@ elseif($mybb->input['action'] == 'new')
 			$title = $db->escape_string($mybb->input['wiki_title']);
 			$message = $db->escape_string($mybb->input['message']);
 			$category = $db->escape_string($mybb->input['category']);
+
+
 
 			$plugins->run_hooks("wiki_new_commit");
 
