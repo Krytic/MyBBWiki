@@ -50,7 +50,7 @@ else
 
 			foreach($xml->article as $article)
 			{
-				$query = "INSERT INTO " . TABLE_PREFIX . "wiki(`authors`,`title`,`content`,`protected`,`lastauthor`,`lastauthorid`,`category`) VALUES('" . $db->escape_string($article->authors) . "','" . $db->escape_string($article->title) . "','" . $db->escape_string($article->content) . "','" . $db->escape_string($article->protected) . "','" . $db->escape_string($article->lastauthor) . "','" . $db->escape_string($article->lastauthorid) . "','" . $db->escape_string($article->category) . "')";
+				$query = "INSERT INTO " . TABLE_PREFIX . "wiki(`authors`,`title`,`content`,`protected`,`lastauthor`,`lastauthorid`,`category`,`original`) VALUES('" . $db->escape_string($article->authors) . "','" . $db->escape_string($article->title) . "','" . $db->escape_string($article->content) . "','" . $db->escape_string($article->protected) . "','" . $db->escape_string($article->lastauthor) . "','" . $db->escape_string($article->lastauthorid) . "','" . $db->escape_string($article->category) . "','" . $db->escape_string($article->original) . "')";
 				$sql = $db->write_query($query);
 				if($db->error_number() > 0)
 				{

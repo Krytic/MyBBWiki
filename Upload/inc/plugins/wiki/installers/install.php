@@ -130,6 +130,15 @@ class WikiInstaller
 			'value'        => 0,
 			);
 		$db->insert_query('wiki_settings', $insert_array);
+
+		$insert_array = array(
+			'sid'            => 'NULL',
+			'name'        => 'wiki_export_allowed',
+			'title'            => 'Exporting Enabled?',
+			'optionscode'    => 'yesno',
+			'value'        => 1,
+			);
+		$db->insert_query('wiki_settings', $insert_array);
 	}
 
 	public function go()

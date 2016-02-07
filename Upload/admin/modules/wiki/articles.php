@@ -170,6 +170,7 @@ elseif($mybb->input['action'] == 'new')
 			'authors' => intval($mybb->user['uid']),
 			'title' => $db->escape_string($mybb->input['title']),
 			'content' => $db->escape_string($mybb->input['message']),
+			'original' => $db->escape_string($mybb->input['message']),
 			'protected' => $protected,
 			'lastauthor' => $db->escape_string($mybb->user['username']),
 			'lastauthorid' => $db->escape_string($mybb->user['uid']),

@@ -32,13 +32,10 @@ MyBB Wiki also inserts two new MyCodes into your forum. They are used like so: `
 
 A link is not added pointing to the wiki, you must add that yourself. :)
 
-### A note about Settings
-
-The setting "Use Markdown Parser" is actually a choice. You can either choose to enable the Markdown parser (and disable the MyCode parser) or enable the MyCode parser (and enable the Markdown parser). So selecting "Yes" on this setting will enable Markdown and disable MyCode, and vice versa. The reason for this is that Markdown and MyCode are incompatible so you've to either choose one or the other. Note that this will not disable the standard MyBB Parser, you will just be unable to use MyCode. Some of the settings hinge on each other - for instance, with MyCode disabled, the editor will not appear (for obvious reasons), with Markdown enabled, the settings to parse HTML (etc) will be ignored.
-
 ## License
 
-[Licensed under Creative Commons Attribution NonCommercial ShareAlike 3.0 Unported.](creativecommons.org/licenses/by-nc-sa/3.0/)
+[Original Code is licensed under Creative Commons Attribution NonCommercial ShareAlike 3.0 Unported.](creativecommons.org/licenses/by-nc-sa/3.0/)
+Some code has been used from other people and this is noted where applicable.
 The license for the Markdown parser is available at `Upload/inc/plugins/wiki/markdown-license.txt`.
 
 **This plugin is not affiliated with or related to Stefan-T's plugin of the same name.**
@@ -46,3 +43,4 @@ The license for the Markdown parser is available at `Upload/inc/plugins/wiki/mar
 ## Contributions
 
 Please submit pull requests against the **master** branch.
+**master** is considered to be bleeding edge, and the tagged releases here or on the MyBB Mods site are stable.
