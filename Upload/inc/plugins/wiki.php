@@ -16,7 +16,7 @@ if (!defined('IN_MYBB'))
 	die('Direct initialization of this file is not allowed.<br /><br />Please make sure IN_MYBB is defined.');
 }
 
-define("WIKI_VERSION", "1.0.1"); // cheeky placement means that we're able to access this constant from anywhere.
+define("WIKI_VERSION", "1.0.2"); // cheeky placement means that we're able to access this constant from anywhere.
 
 $plugins->add_hook('global_start', 'wiki_build_link_definitions');
 $plugins->add_hook('fetch_wol_activity_end', 'wiki_fetch_wol');
