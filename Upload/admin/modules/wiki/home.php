@@ -79,11 +79,13 @@ else if ($mybb->input['action'] == "version_check")
 		$table->construct_cell($latest_release['body']);
 		$table->construct_cell("<a href=\"{$latest_release['html_url']}\">" . $lang->new_release_download . "</a>", array('class' => 'align_center'));
 		$table->construct_row();
-		$table->output($lang->wiki_updates_header);
+	}
+	else {
+		$table->construct_cell($lang->wiki_updates, array("class" => "align_center"));
+		$table->construct_row();
 	}
 
-	$table->construct_cell($lang->wiki_updates, array("class" => "align_center"));
-	$table->construct_row();
+	$table->output($lang->wiki_updates_header);
 }
 
 $page->output_footer();
