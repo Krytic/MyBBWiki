@@ -1,0 +1,63 @@
+ul.btn-group{
+	display:block;
+	list-style:none;
+	overflow:hidden;
+	margin-left:5px;
+	float: right;
+}
+ul.btn-group li{
+	display:block;
+	float:left;
+}
+ul.btn-group li a{
+	display:block;
+	font-weight:bold;
+	text-decoration:none;
+	padding:4px 12px 6px 16px;
+	color:#888;
+	text-shadow:0 1px #fff;
+	border:1px solid #d5d5d5;
+	border-bottom-color:#ddd;
+	background:#ddd;
+	background:-webkit-gradient(linear,left top,left bottom,color-stop(.25, #eee),color-stop(1, #ddd));
+	background: -webkit-linear-gradient(top,#eee 25%,#ddd 100%);
+	background: -moz-linear-gradient(top,#eee 25%,#ddd 100%);
+	background: -o-linear-gradient(top,#eee 25%,#ddd 100%);
+	background: linear-gradient(top,#eee 25%,#ddd 100%);
+	-webkit-box-shadow:inset 0 1px 2px rgba(255,255,255,0.1);
+	-moz-box-shadow:inset 0 1px 2px rgba(255,255,255,0.1);
+	box-shadow:inset 0 1px 2px rgba(255,255,255,0.1);
+}
+ul.btn-group li:first-child a{
+	padding:4px 12px 6px 16px;
+	border-right:0;
+	-webkit-border-radius:18px 0 0 18px;
+	-moz-border-radius:18px 0 0 18px;
+	border-radius:18px 0 0 18px;
+}
+ul.btn-group li:last-child a{
+	padding:4px 16px 6px 12px;
+	-webkit-border-radius:0 18px 18px 0;
+	-moz-border-radius:0 18px 18px 0;
+	border-radius:0 18px 18px 0;
+}
+ul.btn-group li a:hover{
+	background:#eee;
+	background:-webkit-gradient(linear,left top,left bottom,color-stop(.25, #fff),color-stop(1, #eee));
+	background: -webkit-linear-gradient(top,#fff 25%,#eee 100%);
+	background: -moz-linear-gradient(top,#fff 25%,#eee 100%);
+	background: -o-linear-gradient(top,#fff 25%,#eee 100%);
+	background: linear-gradient(top,#fff 25%,#eee 100%);
+}
+ul.btn-group li a:active{
+	text-shadow:0 -1px #fff;
+	background:#ccc;
+	background:-webkit-gradient(linear,left top,left bottom,color-stop(.25, #eee),color-stop(1, #fff));
+	background: -webkit-linear-gradient(top,#eee 25%,#fff 100%);
+	background: -moz-linear-gradient(top,#eee 25%,#fff 100%);
+	background: -o-linear-gradient(top,#eee 25%,#fff 100%);
+	background: linear-gradient(top,#eee 25%,#fff 100%);
+	-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);
+	-moz-box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);
+	box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);
+}

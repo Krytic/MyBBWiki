@@ -16,9 +16,9 @@ if (!defined('IN_MYBB'))
 	die('Direct initialization of this file is not allowed.<br /><br />Please make sure IN_MYBB is defined.');
 }
 
-define("WIKI_VERSION", "1.0.2"); // cheeky placement means that we're able to access this constant from anywhere.
+define("WIKI_VERSION", "1.1.0"); // cheeky placement means that we're able to access this constant from anywhere.
 
-$plugins->add_hook('global_start', 'wiki_build_link_definitions');
+$plugins->add_hook('global_start', 'wiki_global_start');
 $plugins->add_hook('fetch_wol_activity_end', 'wiki_fetch_wol');
 $plugins->add_hook('build_friendly_wol_location_end', 'wiki_build_friendly');
 $plugins->add_hook('parse_message', 'wiki_parse_mycode');
@@ -44,7 +44,7 @@ function wiki_info()
 		'version'       =>  WIKI_VERSION,
 		'guid'          =>  '', // no longer available on MyBB Mods site
 		'compatibility' =>  '18*',
-	);
+		);
 }
 
 function wiki_install()
@@ -68,7 +68,7 @@ function wiki_is_installed()
 
 function wiki_uninstall()
 {
-	global $db;
+	global $db, $cache;
 
 	// Template Deletion
 	$db->delete_query("templategroups", "title = 'Wiki'");
@@ -84,6 +84,29 @@ function wiki_uninstall()
 	// Clear caches
 	$db->delete_query("datacache", 'title="wiki_articles"');
 	$db->delete_query("datacache", 'title="wiki_permissions"');
+
+	require_once(MYBB_ROOT."admin/inc/functions_themes.php");
+
+	// Stylesheet Deletion
+	$query = $db->simple_select("themes", "tid");
+	while($tid = $db->fetch_field($query, "tid"))
+	{
+		$css_file = MYBB_ROOT."cache/themes/theme{$tid}/wiki.css";
+		if(file_exists($css_file))
+			unlink($css_file);
+	}
+
+	update_theme_stylesheet_list("1");
+
+	if (class_exists('MybbStuff_MyAlerts_AlertTypeManager')) {
+		$alertTypeManager = MybbStuff_MyAlerts_AlertTypeManager::getInstance();
+
+		if (!$alertTypeManager) {
+			$alertTypeManager = MybbStuff_MyAlerts_AlertTypeManager::createInstance($db, $cache);
+		}
+
+		$alertTypeManager->deleteByCode('mybb_wiki_alert_code');
+	}
 }
 
 function wiki_activate()
@@ -99,7 +122,7 @@ function wiki_activate()
 		$ins = array(
 			"prefix"	=> "wiki",
 			"title"		=> "Wiki",
-		);
+			);
 
 		$db->insert_query("templategroups", $ins);
 	}
@@ -120,7 +143,7 @@ function wiki_activate()
 				"sid"		=>	"-2",
 				"version"	=>	$mybb->version + 1,
 				"dateline"	=>	time(),
-			);
+				);
 
 			$db->insert_query("templates", $ins);
 		}
@@ -165,43 +188,43 @@ function wiki_fetch_wol(&$user_activity)
 	switch($filename)
 	{
 		case "wiki":
-			if($parameters['action'] == 'new')
-			{
-				$user_activity['activity'] = "wiki_new";
-			}
-			elseif($parameters['action'] == 'edit')
-			{
-				$user_activity['activity'] = "wiki_edit";
-			}
-			elseif($parameters['action'] == 'protect')
-			{
-				$user_activity['activity'] = "wiki_protect";
-			}
-			elseif($parameters['action'] == 'categories')
-			{
-				$user_activity['activity'] = "wiki_categories";
-			}
-			elseif($parameters['action'] == 'export')
-			{
-				$user_activity['activity'] = "wiki_export";
-			}
-			elseif($parameters['action'] == 'diff')
-			{
-				$user_activity['activity'] = "wiki_diff";
-			}
-			elseif($parameters['action'] == 'category_listing')
-			{
-				$user_activity['activity'] = "wiki_category_listing";
-			}
-			elseif($parameters['action'] == 'contributors')
-			{
-				$user_activity['activity'] = "wiki_contributors";
-			}
-			else
-			{
-				$user_activity['activity'] = "wiki_view";
-			}
-			break;
+		if($parameters['action'] == 'new')
+		{
+			$user_activity['activity'] = "wiki_new";
+		}
+		elseif($parameters['action'] == 'edit')
+		{
+			$user_activity['activity'] = "wiki_edit";
+		}
+		elseif($parameters['action'] == 'protect')
+		{
+			$user_activity['activity'] = "wiki_protect";
+		}
+		elseif($parameters['action'] == 'categories')
+		{
+			$user_activity['activity'] = "wiki_categories";
+		}
+		elseif($parameters['action'] == 'export')
+		{
+			$user_activity['activity'] = "wiki_export";
+		}
+		elseif($parameters['action'] == 'diff')
+		{
+			$user_activity['activity'] = "wiki_diff";
+		}
+		elseif($parameters['action'] == 'category_listing')
+		{
+			$user_activity['activity'] = "wiki_category_listing";
+		}
+		elseif($parameters['action'] == 'contributors')
+		{
+			$user_activity['activity'] = "wiki_contributors";
+		}
+		else
+		{
+			$user_activity['activity'] = "wiki_view";
+		}
+		break;
 	}
 
 	return $user_activity;
@@ -216,32 +239,32 @@ function wiki_build_friendly(&$plugin_array)
 	switch($plugin_array['user_activity']['activity'])
 	{
 		case "wiki_view":
-			$plugin_array['location_name'] = $lang->viewing_wiki;
-			break;
+		$plugin_array['location_name'] = $lang->viewing_wiki;
+		break;
 		case "wiki_new":
-			$plugin_array['location_name'] = $lang->wiki_new;
+		$plugin_array['location_name'] = $lang->wiki_new;
 		case "wiki_edit":
-			break;
-			$plugin_array['location_name'] = $lang->wiki_edit;
-			break;
+		break;
+		$plugin_array['location_name'] = $lang->wiki_edit;
+		break;
 		case "wiki_protect":
-			$plugin_array['location_name'] = $lang->wiki_protect;
-			break;
+		$plugin_array['location_name'] = $lang->wiki_protect;
+		break;
 		case "wiki_categories":
-			$plugin_array['location_name'] = $lang->wiki_categories;
-			break;
+		$plugin_array['location_name'] = $lang->wiki_categories;
+		break;
 		case "wiki_export":
-			$plugin_array['location_name'] = $lang->wiki_export;
-			break;
+		$plugin_array['location_name'] = $lang->wiki_export;
+		break;
 		case "wiki_diff":
-			$plugin_array['location_name'] = $lang->wiki_diff;
-			break;
+		$plugin_array['location_name'] = $lang->wiki_diff;
+		break;
 		case "wiki_category_listing":
-			$plugin_array['location_name'] = $lang->wiki_category_listing;
-			break;
+		$plugin_array['location_name'] = $lang->wiki_category_listing;
+		break;
 		case "wiki_contributors":
-			$plugin_array['location_name'] = $lang->wiki_wol_contributors;
-			break;
+		$plugin_array['location_name'] = $lang->wiki_wol_contributors;
+		break;
 	}
 
 	return $plugin_array;
@@ -274,11 +297,13 @@ function wiki_do_mycode_with_id($matches)
 }
 
 /**
+ * GLOBAL START
  * Builds a list of links for the wiki -- for instance WIKI_URL holds the base URL for the wiki wherever you are. loaded globally.
+ * Also handles MyAlerts formatting
  */
-function wiki_build_link_definitions()
+function wiki_global_start()
 {
-	global $mybb;
+	global $mybb, $lang;
 
 	if($mybb->settings['seourls'] == "yes" || ($mybb->settings['seourls'] == "auto" && isset($_SERVER['SEO_SUPPORT']) && $_SERVER['SEO_SUPPORT'] == 1))
 	{
@@ -305,6 +330,19 @@ function wiki_build_link_definitions()
 		define("WIKI_DIFF", "wiki.php");
 		define("WIKI_CATEGORY_LISTING", "wiki.php");
 		define("WIKI_CONTRIBUTORS", "wiki.php");
+	}
+
+	if (class_exists('MybbStuff_MyAlerts_AlertFormatterManager')) {
+		require_once MYBB_ROOT . "inc/plugins/wiki/WikiCustomAlertFormatter.php";
+		$formatterManager = MybbStuff_MyAlerts_AlertFormatterManager::getInstance();
+
+		if (!$formatterManager) {
+			$formatterManager = MybbStuff_MyAlerts_AlertFormatterManager::createInstance($mybb, $lang);
+		}
+
+		$formatterManager->registerFormatter(
+			new WikiCustomAlertFormatter($mybb, $lang, 'mybb_wiki_alert_code')
+			);
 	}
 }
 
