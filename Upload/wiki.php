@@ -410,7 +410,10 @@ elseif($mybb->input['action'] == 'edit')
 				$alerts = array();
 				foreach($user_array as $user)
 				{
-					$alerts[] = new MybbStuff_MyAlerts_Entity_Alert($user, $alertType, $id);
+					$alert = new MybbStuff_MyAlerts_Entity_Alert($user, $alertType, $id);
+					$alert->setExtraDetails(array('title' => $wiki['title']));
+
+					$alerts[] = $alert;
 				}
 
 				MybbStuff_MyAlerts_AlertManager::getInstance()->addAlerts($alerts);
@@ -426,7 +429,7 @@ elseif($mybb->input['action'] == 'edit')
 			// All done. :-)
 
 			$id = (int) $mybb->input['id'];
-			header("Location: wiki.php?action=view&id=$id");
+			redirect("wiki.php?action=view&id=$id", $lang->wiki_edited);
 		}
 	}
 }
@@ -614,16 +617,14 @@ elseif($mybb->input['action'] == 'export')
 
 		while($article = $db->fetch_array($sql))
 		{
+
 			// Generate a nice format for the xml.
 			$xml .= "	<article>\n";
-			$xml .= "		<id>{$article['id']}</id>\n";
-			$xml .= "		<title>{$article['title']}</title>\n";
-			$xml .= "		<content>{$article['content']}</content>\n";
-			$xml .= "		<category>{$article['category']}</category>\n";
-			$xml .= "		<lastauthor>{$article['lastauthor']}</lastauthor>\n";
-			$xml .= "		<lastauthorid>{$article['lastauthorid']}</lastauthorid>\n";
-			$xml .= "		<protected>{$article['protected']}</protected>\n";
-			$xml .= "		<authors>{$article['authors']}</authors>\n";
+
+			foreach($article as $key => $value) {
+				$xml .= "		<{$key}>{$value}</{$key}>\n";
+			}
+
 			$xml .= "	</article>\n";
 		}
 
@@ -780,6 +781,8 @@ elseif($mybb->input['action'] == 'watch')
 
 	$wiki = $db->fetch_array($query);
 
+	$plugins->run_hooks('wiki_watch_start');
+
 	if($wiki['watching'] != null)
 	{
 		$watching = explode(',',$wiki['watching']);
@@ -799,6 +802,8 @@ elseif($mybb->input['action'] == 'watch')
 	}
 
 	$db->write_query(sprintf("UPDATE `%swiki` SET `watching`='{$wiki['watching']}' WHERE `id`='{$id}'", TABLE_PREFIX));
+
+	$plugins->run_hooks('wiki_watch_end');
 
 	redirect("wiki.php", $lang->wiki_now_watching);
 }
@@ -820,6 +825,8 @@ elseif($mybb->input['action'] == 'unwatch')
 
 	$wiki = $db->fetch_array($query);
 
+	$plugins->run_hooks('wiki_unwatch_start');
+
 	if($wiki['watching'] != null)
 	{
 		$watching = explode(',',$wiki['watching']);
@@ -837,6 +844,8 @@ elseif($mybb->input['action'] == 'unwatch')
 	}
 
 	$db->write_query(sprintf("UPDATE `%swiki` SET `watching`='{$watching}' WHERE `id`='{$id}'", TABLE_PREFIX));
+
+	$plugins->run_hooks('wiki_unwatch_end');
 
 	redirect("wiki.php", $lang->wiki_now_not_watching);
 }

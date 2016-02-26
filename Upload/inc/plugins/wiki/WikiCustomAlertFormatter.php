@@ -14,7 +14,8 @@ class WikiCustomAlertFormatter extends MybbStuff_MyAlerts_Formatter_AbstractForm
      */
     public function formatAlert(MybbStuff_MyAlerts_Entity_Alert $alert, array $outputAlert)
     {
-        return $this->lang->sprintf($this->lang->wiki_watching_alert_string);
+        $alertContent = $alert->getExtraDetails();
+        return $this->lang->sprintf($this->lang->wiki_watching_alert_string, $alertContent['title']);
     }
 
     /**

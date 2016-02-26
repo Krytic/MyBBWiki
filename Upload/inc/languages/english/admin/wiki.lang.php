@@ -9,6 +9,7 @@ $l['wiki_can_manage_imports'] = "Can import Wiki Articles";
 $l['wiki_can_manage_perms'] = "Can manage Wiki Permissions";
 $l['wiki_can_manage_settings'] = "Can manage Wiki settings";
 $l['wiki_can_manage_docs'] = "Can read the Wiki Documentation";
+$l['wiki_can_upgrade'] = "Can run the Upgraders";
 $l['nav_docs'] = "Documentation";
 $l['nav_updates'] = "Updates";
 $l['nav_cat'] = "Categories";
@@ -17,6 +18,7 @@ $l['nav_perms'] = "Permissions";
 $l['nav_settings'] = "Settings";
 $l['nav_plugin_pane'] = "View in Plugin Manager";
 $l['nav_templates'] = "Templates";
+$l['nav_upgrades'] = "Upgrades";
 /* articles.php stuff */
 $l['wiki_articles'] = "Wiki Articles";
 $l['wiki_articles_description'] = "A listing of all the wiki articles on your forum.";
@@ -64,8 +66,11 @@ $l['wiki_categories_description'] = "Manage your categories. A default one, the 
 $l['wiki_category_name'] = "Category Name";
 $l['wiki_category_options'] = "Options";
 $l['wiki_cat_delete'] = "Delete";
+$l['wiki_cat_edit'] = "Edit";
 $l['wiki_cat_deleted_success'] = "Category successfully deleted.";
+$l['wiki_cat_edited_success'] = "Category successfully edited.";
 $l['wiki_cat_none'] = "No categories specified.";
+$l['wiki_categories_edit'] = "Edit Category";
 $l['wiki_categories_add'] = "Add a Category";
 $l['wiki_categories_add_description'] = "Add extra categories here - one for cats, another for MacBooks, it's your choice.";
 $l['wiki_commit'] = "Commit";
@@ -113,9 +118,19 @@ $l['wiki_new_template_search_desc'] = "The {{ and }} is added automatically - yo
 $l['wiki_new_template_replace'] = "Replacement";
 $l['wiki_new_template_replace_desc'] = "This value is NOT SANITIZED so that you can enter HTML etc here.";
 $l['wiki_new_template_done'] = "Your new template has been created successfully.";
+/* upgrades.php stuff */
+$l['wiki_upgrades'] = "Upgrades";
+$l['wiki_upgrades_description'] = "Run the various upgraders to the Wiki";
+$l['wiki_upgrades_to'] = "To";
+$l['wiki_upgrades_run'] = "Run";
+$l['wiki_upgrade_desc'] = "Description";
+$l['wiki_upgrade_yes'] = "The upgrade has successfully been run";
+$l['wiki_upgrade_no'] = "The upgrade failed: {1}";
+$l['wiki_upgrades_none'] = "There are no upgrades available";
 /* errors */
 $l['wiki_error'] = "An error occured while trying to process your request, please try again later.";
 $l['wiki_error_pc'] = "Post Codes did not match!";
+$l['wiki_no_id'] = "You must provide an ID of an article to edit!";
 /* misc */
 $l['wiki_creator'] = "Created by Adamas.";
 $l['wiki_wip'] = "<h1>WIP</h1>";
@@ -128,6 +143,8 @@ $l['wiki_total_articles'] = "<h2>{1} article{2}</h2>";
 $l['wiki_total_cats'] = "<h2>{1} categor{2}</h2>";
 $l['wiki_updates'] = "<strong>MyBB Wiki is fully up to date</strong>";
 $l['wiki_updates_header'] = "Updates";
+$l['wiki_updater_required'] = "Upgrader Required";
+$l['wiki_updater_not_required'] = "Upgrader not Required";
 $l['wiki_check_for_updates'] = "<h2><a href=\"index.php?module=wiki&action=version_check\">Check for updates</a></h2>";
 $l['wiki_version'] = "<h2>Version {1}</h2>";
 

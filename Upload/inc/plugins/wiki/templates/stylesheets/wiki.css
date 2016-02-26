@@ -61,3 +61,15 @@ ul.btn-group li a:active{
 	-moz-box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);
 	box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);
 }
+
+.diff-report del {
+	/* This is the removed portion of the diff report */
+	text-decoration: none; /* Must be present to remove the strikethrough */
+	background: #C67171;
+}
+
+.diff-report ins {
+	/* This is the added portion of the diff report */
+	text-decoration: none; /* Must be present to remove the underline */
+	background: #A6D785;
+}

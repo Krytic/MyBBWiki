@@ -63,7 +63,8 @@ $l['wasprotected'] = "You have successfully protected the article. Now redirecti
 $l['posted'] = "The article has been posted. Now redirecting you to the wiki index.";
 $l['wiki_now_watching'] = "You are now watching this article.";
 $l['wiki_now_not_watching'] = "You are no longer watching this article.";
+$l['wiki_edited'] = "You have successfully edited the article.";
 /* --- Miscellaneous --- */
-$l['wiki_watching_alert_string'] = 'A Wiki Article you are watching has been updated!';
+$l['wiki_watching_alert_string'] = '{1} has been updated!';
 
 ?>

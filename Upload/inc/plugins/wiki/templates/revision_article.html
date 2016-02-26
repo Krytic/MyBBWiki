@@ -23,25 +23,12 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="tcat">
-				<span class="smalltext"><strong>{$lang->original}</strong></span>
-			</td>
-			<td class="tcat">
-				<span class="smalltext"><strong>{$lang->current}</strong></span>
-			</td>
 			<tr>
-				<td class="trow1">
-					{$article['original']}
-				</td>
-				<td class="trow2">
-					{$article['content']}
-				</td>
-			</tr>
-			<tr>
-				<td class="trow1" colspan="2">
+				<td class="trow1 diff-report" colspan="2">
 					{$diff_report}
 				</td>
-			</table>
-			{$footer}
-		</body>
-		</html>
+			</tr>
+		</table>
+		{$footer}
+	</body>
+	</html>

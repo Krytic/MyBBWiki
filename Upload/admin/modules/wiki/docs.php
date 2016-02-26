@@ -16,46 +16,75 @@ $sub_tabs['wiki_docs'] = array(
 	'title'			=> $lang->wiki_docs,
 	'link'			=> 'index.php?module=wiki-docs',
 	'description'	=> $lang->wiki_docs_description
-);
+	);
 
-$sub_tabs['wiki_docs_2'] = array(
-	'title'			=> $lang->wiki_docs_2,
-	'link'			=> 'index.php?module=wiki-docs&amp;page=2',
-	'description'	=> $lang->wiki_ext_desc
-);
+$inc = 3;
 
-$sub_tabs['wiki_docs_3'] = array(
-	'title'			=> $lang->wiki_credits,
-	'link'			=> 'index.php?module=wiki-docs&amp;page=3',
-	'description'	=> $lang->wiki_credits_desc
-);
+$dir = new DirectoryIterator(MYBB_ROOT . 'inc/plugins/wiki/docs');
+require_once MYBB_ROOT.'inc/plugins/wiki/markdown/markdown.php';
+
+foreach($dir as $file)
+{
+	if(!$file->isDot() && !$file->isDir() && pathinfo($file->getFilename(), PATHINFO_EXTENSION) == 'md')
+	{
+		$content = file_get_contents($file->getPathname());
+
+		$regex = '#<meta>(.*?)</meta>#';
+		preg_match_all($regex, $content, $matches);
+
+		$cfg = explode('|', $matches[1][0]);
+		$config = array();
+
+		foreach($cfg as $key => $val)
+		{
+			$arr = explode(':', $val);
+			$config[$arr[0]] = $arr[1];
+		}
+
+		if($config['title'] == 'Home') {
+			continue; // this is the home page
+		}
+
+		$inc++;
+		$sub_tabs['wiki_docs_' . $config['code']] = array(
+			'title'			=> $config['title'],
+			'link'			=> 'index.php?module=wiki-docs&amp;page=' . $config['code'],
+			'description'	=> $config['desc']
+			);
+	}
+}
 
 $table = new Table;
-if(!$mybb->input['page'])
-{
-	// Main page
-	$page->output_nav_tabs($sub_tabs, 'wiki_docs');
-	$table->construct_cell($lang->wiki_intro_body, array('colspan' => 2, 'class' => 'align_center'));
+
+if(isset($mybb->input['page']) && $mybb->input['page'] != 'credits') {
+	$code = strval($mybb->input['page']);
+	$suffix = '_' . $code;
+
+	$content = file_get_contents(MYBB_ROOT . 'inc/plugins/wiki/docs/' . $code . ".md");
+
+	$regex = '#<meta>(.*?)</meta>#';
+	preg_match_all($regex, $content, $matches);
+
+	$content = str_replace($matches[1][0], '', $content);
+
+	$cfg = explode('|', $matches[1][0]);
+	$config = array();
+
+	foreach($cfg as $key => $val)
+	{
+		$arr = explode(':', $val);
+		$config[$arr[0]] = $arr[1];
+	}
+
+	$table->construct_cell(Markdown($content));
 	$table->construct_row();
-	$table->construct_cell($lang->wiki_intro_par1, array('class' => 'align_center', 'width' => '50%'));
-	$table->construct_cell($lang->sprintf($lang->wiki_intro_par2, WIKI_VERSION), array('class' => 'align_center', 'width' => '50%'));
-	$table->construct_row();
-	$table->output($lang->wiki_docs);
+
+	$tableTitle = $config['title'];
 }
-elseif($mybb->input['page'] == 2)
-{
-	// Extensibility page
-	$page->output_nav_tabs($sub_tabs, 'wiki_docs_2');
-	$table->construct_cell($lang->wiki_ext_head, array('class' => 'align_center'));
-	$table->construct_row();
-	$table->construct_cell($lang->wiki_ext_par1 . "<br /><br />" . $lang->wiki_ext_par2 . "<br /><br />" . $lang->wiki_ext_par3);
-	$table->construct_row();
-	$table->output($lang->wiki_docs);
-}
-elseif($mybb->input['page'] == 3)
+else if(isset($mybb->input['page']) && $mybb->input['page'] == 'credits')
 {
 	// Credits page
-	$page->output_nav_tabs($sub_tabs, 'wiki_docs_3');
+	$suffix = '_3';
 
 	$credits = array(
 		"euantor" => array(
@@ -82,7 +111,43 @@ elseif($mybb->input['page'] == 3)
 		$table->construct_row();
 	}
 
-	$table->output($lang->wiki_docs);
+	$tableTitle = $lang->wiki_docs;
+}
+else {
+	$suffix = '';
+
+	$content = file_get_contents(MYBB_ROOT . 'inc/plugins/wiki/docs/home.md');
+
+	$regex = '#<meta>(.*?)</meta>#';
+	preg_match_all($regex, $content, $matches);
+
+	$content = str_replace($matches[1][0], '', $content);
+
+	$cfg = explode('|', $matches[1][0]);
+	$config = array();
+
+	foreach($cfg as $key => $val)
+	{
+		$arr = explode(':', $val);
+		$config[$arr[0]] = $arr[1];
+	}
+
+	$table->construct_cell(Markdown($content));
+	$table->construct_row();
+
+	$tableTitle = $lang->wiki_docs;
+}
+
+$sub_tabs['wiki_docs_3'] = array(
+	'title' 		=>	$lang->wiki_credits,
+	'link'			=>	'index.php?module=wiki-docs&amp;page=credits',
+	'description'	=>	$lang->wiki_credits_desc
+);
+
+$page->output_nav_tabs($sub_tabs, 'wiki_docs' . $suffix);
+
+if(isset($tableTitle)) {
+	$table->output($tableTitle);
 }
 
 $page->output_footer();
