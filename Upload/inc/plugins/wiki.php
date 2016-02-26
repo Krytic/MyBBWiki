@@ -16,7 +16,7 @@ if (!defined('IN_MYBB'))
 	die('Direct initialization of this file is not allowed.<br /><br />Please make sure IN_MYBB is defined.');
 }
 
-define("WIKI_VERSION", "1.1.0"); // cheeky placement means that we're able to access this constant from anywhere.
+define("WIKI_VERSION", "1.1.1"); // cheeky placement means that we're able to access this constant from anywhere.
 
 $plugins->add_hook('global_start', 'wiki_global_start');
 $plugins->add_hook('fetch_wol_activity_end', 'wiki_fetch_wol');
@@ -85,7 +85,7 @@ function wiki_uninstall()
 	$db->delete_query("datacache", 'title="wiki_articles"');
 	$db->delete_query("datacache", 'title="wiki_permissions"');
 
-	require_once(MYBB_ROOT."admin/inc/functions_themes.php");
+	require_once(MYBB_ADMIN_DIR."inc/functions_themes.php");
 
 	// Stylesheet Deletion
 	$query = $db->simple_select("themes", "tid");

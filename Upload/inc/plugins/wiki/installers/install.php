@@ -78,7 +78,7 @@ class WikiInstaller
 	private function insertCSS()
 	{
 		global $db;
-		require_once(MYBB_ROOT."admin/inc/functions_themes.php");
+		require_once(MYBB_ADMIN_DIR . "inc/functions_themes.php");
 
 		// Add stylesheet to the master template so it becomes inherited.
 		$stylesheet = @file_get_contents(MYBB_ROOT.'inc/plugins/wiki/templates/stylesheets/wiki.css');
