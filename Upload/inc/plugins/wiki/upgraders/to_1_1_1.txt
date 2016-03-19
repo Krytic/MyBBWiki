@@ -1,0 +1,19 @@
+<?php
+
+class to_1_1_1 {
+	private $error = "";
+	public function info() {
+		return array(
+			'version'	=> '1.1.1',
+			'desc'		=> 'Upgrades automatically to v1.1.1',
+			);
+	}
+
+	public function run() {
+		global $db;
+	}
+
+	public function error() {
+		return $this->error;
+	}
+}

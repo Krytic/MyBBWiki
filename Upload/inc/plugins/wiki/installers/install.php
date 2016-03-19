@@ -15,10 +15,11 @@ class WikiInstaller
 				authors TEXT(255) NOT NULL,
 				title TEXT(255),
 				content TEXT,
+				watching TEXT(65535),
 				protected INT DEFAULT '0',
-				lastauthor TEXT(255) DEFAULT '',
+				lastauthor TEXT(255),
 				lastauthorid INT(8),
-				notepad TEXT(255) DEFAULT '',
+				notepad TEXT(255),
 				category TEXT(255),
 				original TEXT
 				) ENGINE=MyISAM{$collation};", TABLE_PREFIX));
@@ -57,7 +58,7 @@ class WikiInstaller
 				name TEXT(255) NOT NULL,
 				title TEXT(255) NOT NULL,
 				optionscode TEXT(255) NOT NULL,
-				value TEXT(255) DEFAULT ''
+				value TEXT(255)
 				) ENGINE=MyISAM{$collation};", TABLE_PREFIX));
 		}
 		if (!$db->table_exists('wiki_templates'))
@@ -73,12 +74,31 @@ class WikiInstaller
 		unset($collation);
 	}
 
+	private function insertCSS()
+	{
+		global $db;
+		require_once(MYBB_ADMIN_DIR . "inc/functions_themes.php");
+
+		// Add stylesheet to the master template so it becomes inherited.
+		$stylesheet = @file_get_contents(MYBB_ROOT.'inc/plugins/wiki/templates/stylesheets/wiki.css');
+		$wiki_stylesheet = array(
+			'name' => 'wiki.css',
+			'tid' => '1',
+			'stylesheet' => $db->escape_string($stylesheet),
+			'cachefile' => 'wiki.css',
+			'lastmodified' => TIME_NOW,
+			'attachedto' => 'wiki.php'
+			);
+		$db->insert_query('themestylesheets', $wiki_stylesheet);
+		cache_stylesheet(1, "wiki.css", $stylesheet);
+		update_theme_stylesheet_list("1");
+	}
+
 	private function insertSettings()
 	{
 		global $db;
 
 		$insert_array = array(
-			'sid'            => 'NULL',
 			'name'        => 'wiki_enable',
 			'title'            => 'Power Switch',
 			'optionscode'    => 'onoff',
@@ -87,7 +107,6 @@ class WikiInstaller
 		$db->insert_query('wiki_settings', $insert_array);
 
 		$insert_array = array(
-			'sid'            => 'NULL',
 			'name'        => 'wiki_parse_smileys',
 			'title'            => 'Parse Smilies?',
 			'optionscode'    => 'yesno',
@@ -96,7 +115,6 @@ class WikiInstaller
 		$db->insert_query('wiki_settings', $insert_array);
 
 		$insert_array = array(
-			'sid'            => 'NULL',
 			'name'        => 'wiki_mybbparser',
 			'title'            => 'Use the MyBB Parser?',
 			'optionscode'    => 'yesno',
@@ -105,7 +123,6 @@ class WikiInstaller
 		$db->insert_query('wiki_settings', $insert_array);
 
 		$insert_array = array(
-			'sid'            => 'NULL',
 			'name'        => 'wiki_markdown',
 			'title'            => 'Use Markdown Parser?',
 			'optionscode'    => 'yesno',
@@ -114,7 +131,6 @@ class WikiInstaller
 		$db->insert_query('wiki_settings', $insert_array);
 
 		$insert_array = array(
-			'sid'            => 'NULL',
 			'name'        => 'wiki_mycode_editor',
 			'title'            => 'Clickable MyCode editor',
 			'optionscode'    => 'yesno',
@@ -123,7 +139,6 @@ class WikiInstaller
 		$db->insert_query('wiki_settings', $insert_array);
 
 		$insert_array = array(
-			'sid'            => 'NULL',
 			'name'        => 'wiki_parse_html',
 			'title'            => 'Parse HTML?',
 			'optionscode'    => 'yesno',
@@ -132,7 +147,6 @@ class WikiInstaller
 		$db->insert_query('wiki_settings', $insert_array);
 
 		$insert_array = array(
-			'sid'            => 'NULL',
 			'name'        => 'wiki_export_allowed',
 			'title'            => 'Exporting Enabled?',
 			'optionscode'    => 'yesno',
@@ -141,13 +155,42 @@ class WikiInstaller
 		$db->insert_query('wiki_settings', $insert_array);
 	}
 
+	private function handleMyAlerts()
+	{
+		global $db, $cache;
+		if (class_exists('MybbStuff_MyAlerts_AlertTypeManager'))
+		{
+			$alertTypeManager = MybbStuff_MyAlerts_AlertTypeManager::getInstance();
+
+			if (!$alertTypeManager)
+			{
+				$alertTypeManager = MybbStuff_MyAlerts_AlertTypeManager::createInstance($db, $cache);
+			}
+
+			$alertType = new MybbStuff_MyAlerts_Entity_AlertType();
+			$alertType->setCode('mybb_wiki_alert_code'); // The codename for your alert type. Can be any unique string.
+			$alertType->setEnabled(true);
+			$alertType->setCanBeUserDisabled(true);
+
+			$alertTypeManager->add($alertType);
+		}
+	}
+
 	public function go()
 	{
 		global $db, $cache;
 
+		if(function_exists('wiki_is_installed') && wiki_is_installed()) {
+			return false;
+		}
+
 		$this->buildTables();
 		$this->insertSettings();
 		rebuild_settings();
+
+		$this->insertCSS();
+
+		$this->handleMyAlerts();
 
 		$query = $db->write_query("SELECT * FROM `" . TABLE_PREFIX . "usergroups`");
 		$cache_arr = array();
@@ -170,6 +213,8 @@ class WikiInstaller
 		$cache->update('wiki_permissions', $cache_arr);
 
 		$db->write_query("INSERT INTO " . TABLE_PREFIX . "wiki_categories(title) VALUES('Meta')");
+
+		return true;
 	}
 }
 

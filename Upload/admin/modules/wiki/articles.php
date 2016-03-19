@@ -1,12 +1,5 @@
 <?php
 
-// wiki.php
-// /inc/plugins/wiki.php
-// /admin/modules/wiki/module_meta.php
-// /admin/modules/wiki/home.php
-// /admin/modules/wiki/articles.php
-// /inc/languages/english/admin/wiki.lang.php
-
 // Disallow direct access to this file for security reasons
 if(!defined("IN_MYBB"))
 {

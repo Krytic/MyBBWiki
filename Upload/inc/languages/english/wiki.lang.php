@@ -32,6 +32,9 @@ $l['nomessage'] = "There is no message!";
 $l['errorsocc'] = "The following errors occured:<br />{1}";
 $l['nocat'] = "You must specify the title of a category to filter.";
 $l['noarticlescat'] = "There are no articles in this category.";
+$l['wiki_myalerts_not_installed'] = "Watching Articles is not available.";
+$l['wiki_already_watching'] = "You are already watching this article.";
+$l['wiki_not_already_watching'] = "You are already not watching this article.";
 /* --- Buttons and Options --- */
 $l['title'] = "Article Title";
 $l['content'] = "Article Content";
@@ -43,6 +46,8 @@ $l['editing'] = "Editing {1}";
 $l['lastpost'] = "Last Editor";
 $l['protect'] = "Protect Article";
 $l['export'] = "Export Articles";
+$l['wiki_watch'] = "Watch";
+$l['wiki_unwatch'] = "Unwatch";
 /* --- Who's Online --- */
 $l['viewing_wiki'] = "Viewing the Wiki";
 $l['wiki_new'] = "Creating a new Wiki Article";
@@ -56,5 +61,10 @@ $l['wiki_wol_contributors'] = "Viewing the contributors of a Wiki Article";
 /* --- Redirects --- */
 $l['wasprotected'] = "You have successfully protected the article. Now redirecting you back to the article.";
 $l['posted'] = "The article has been posted. Now redirecting you to the wiki index.";
+$l['wiki_now_watching'] = "You are now watching this article.";
+$l['wiki_now_not_watching'] = "You are no longer watching this article.";
+$l['wiki_edited'] = "You have successfully edited the article.";
+/* --- Miscellaneous --- */
+$l['wiki_watching_alert_string'] = '{1} has been updated!';
 
 ?>

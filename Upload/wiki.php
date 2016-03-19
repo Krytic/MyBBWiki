@@ -112,6 +112,15 @@ elseif($mybb->input['action'] == 'view')
 	{
 		eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
 	}
+	if(function_exists('myalerts_is_installed') && myalerts_is_installed()) {
+		$un = '';
+		if(in_array($mybb->user['uid'], explode(',', $wiki['watching'])))
+		{
+			$un = "un";
+			$lang->wiki_watch = $lang->wiki_unwatch;
+		}
+		eval("\$watch_bit = \"".$templates->get("wiki_watch_button")."\";");
+	}
 
 	add_breadcrumb($wiki['title']);
 
@@ -175,6 +184,20 @@ elseif($mybb->input['action'] == 'talk')
 		error($lang->pickarticle);
 	}
 
+	if($permissions['can_protect'])
+	{
+		eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
+	}
+	if(function_exists('myalerts_is_installed') && myalerts_is_installed()) {
+		$un = '';
+		if(in_array($mybb->user['uid'], explode(',', $wiki['watching'])))
+		{
+			$un = "un";
+			$lang->wiki_watch = $lang->wiki_unwatch;
+		}
+		eval("\$watch_bit = \"".$templates->get("wiki_watch_button")."\";");
+	}
+
 	$id = (int) $mybb->input['id'];
 	$query = $db->write_query(sprintf("SELECT * FROM `%swiki` WHERE `id`='{$id}'", TABLE_PREFIX));
 
@@ -193,6 +216,15 @@ elseif($mybb->input['action'] == 'talk')
 	if($permissions['can_protect'])
 	{
 		eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
+	}
+	if(function_exists('myalerts_is_installed') && myalerts_is_installed()) {
+		$un = '';
+		if(in_array($mybb->user['uid'], explode(',', $wiki['watching'])))
+		{
+			$un = "un";
+			$lang->wiki_watch = $lang->wiki_unwatch;
+		}
+		eval("\$watch_bit = \"".$templates->get("wiki_watch_button")."\";");
 	}
 
 	add_breadcrumb($wiki['title']);
@@ -266,9 +298,24 @@ elseif($mybb->input['action'] == 'edit')
 		error($lang->pickarticle);
 	}
 
+	if($permissions['can_protect'])
+	{
+		eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
+	}
+	if(function_exists('myalerts_is_installed') && myalerts_is_installed()) {
+		$un = '';
+		if(in_array($mybb->user['uid'], explode(',', $wiki['watching'])))
+		{
+			$un = "un";
+			$lang->wiki_watch = $lang->wiki_unwatch;
+		}
+		eval("\$watch_bit = \"".$templates->get("wiki_watch_button")."\";");
+	}
+
 	$id = (int) $mybb->input['id'];
 	$info = $db->write_query(sprintf("SELECT * FROM `%swiki` WHERE `id`='{$id}'", TABLE_PREFIX));
 	$article = $db->fetch_array($info);
+	$wiki = $article; // backwards compatibility
 
 	if($mybb->request_method != "post")
 	{
@@ -354,6 +401,25 @@ elseif($mybb->input['action'] == 'edit')
 
 		$sql = $db->write_query(sprintf("INSERT INTO %swiki_edits(`aid`,`author`,`revision`) VALUES('{$id}','{$mybb->user['uid']}','{$message}')", TABLE_PREFIX));
 
+		if(class_exists('MybbStuff_MyAlerts_AlertTypeManager'))
+		{
+			$user_array = explode(',', $wiki['watching']);
+			$alertType = MybbStuff_MyAlerts_AlertTypeManager::getInstance()->getByCode('mybb_wiki_alert_code');
+
+			if ($alertType != null && $alertType->getEnabled()) {
+				$alerts = array();
+				foreach($user_array as $user)
+				{
+					$alert = new MybbStuff_MyAlerts_Entity_Alert($user, $alertType, $id);
+					$alert->setExtraDetails(array('title' => $wiki['title']));
+
+					$alerts[] = $alert;
+				}
+
+				MybbStuff_MyAlerts_AlertManager::getInstance()->addAlerts($alerts);
+			}
+		}
+
 		if(!$sql)
 		{
 			error($lang->notupdated);
@@ -363,7 +429,7 @@ elseif($mybb->input['action'] == 'edit')
 			// All done. :-)
 
 			$id = (int) $mybb->input['id'];
-			header("Location: wiki.php?action=view&id=$id");
+			redirect("wiki.php?action=view&id=$id", $lang->wiki_edited);
 		}
 	}
 }
@@ -456,8 +522,8 @@ elseif($mybb->input['action'] == 'new')
 					"INSERT INTO %swiki(authors,title,content,lastauthor,lastauthorid,category,original)
 					VALUES('{$mybb->user['uid']}','{$title}','{$message}','{$mybb->user['username']}','{$mybb->user['uid']}','{$category}','{$message}')",
 					TABLE_PREFIX
-				)
-			);
+					)
+				);
 
 			$updates = $cache->read('wiki_articles');
 			$updates[$db->insert_id()] = $title;
@@ -551,16 +617,14 @@ elseif($mybb->input['action'] == 'export')
 
 		while($article = $db->fetch_array($sql))
 		{
+
 			// Generate a nice format for the xml.
 			$xml .= "	<article>\n";
-			$xml .= "		<id>{$article['id']}</id>\n";
-			$xml .= "		<title>{$article['title']}</title>\n";
-			$xml .= "		<content>{$article['content']}</content>\n";
-			$xml .= "		<category>{$article['category']}</category>\n";
-			$xml .= "		<lastauthor>{$article['lastauthor']}</lastauthor>\n";
-			$xml .= "		<lastauthorid>{$article['lastauthorid']}</lastauthorid>\n";
-			$xml .= "		<protected>{$article['protected']}</protected>\n";
-			$xml .= "		<authors>{$article['authors']}</authors>\n";
+
+			foreach($article as $key => $value) {
+				$xml .= "		<{$key}>{$value}</{$key}>\n";
+			}
+
 			$xml .= "	</article>\n";
 		}
 
@@ -589,7 +653,22 @@ elseif($mybb->input['action'] == "diff")
 		error($lang->invalid_article);
 	}
 
+	if($permissions['can_protect'])
+	{
+		eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
+	}
+	if(function_exists('myalerts_is_installed') && myalerts_is_installed()) {
+		$un = '';
+		if(in_array($mybb->user['uid'], explode(',', $wiki['watching'])))
+		{
+			$un = "un";
+			$lang->wiki_watch = $lang->wiki_unwatch;
+		}
+		eval("\$watch_bit = \"".$templates->get("wiki_watch_button")."\";");
+	}
+
 	$article = $db->fetch_array($query);
+	$wiki = $article; // this is for backwards compatibility
 
 	require_once MYBB_ROOT . "inc/3rdparty/diff/Diff.php";
 	require_once MYBB_ROOT . "inc/3rdparty/diff/Diff/Renderer.php";
@@ -632,8 +711,24 @@ elseif($mybb->input['action'] == 'category_listing')
 }
 elseif($mybb->input['action'] == 'contributors')
 {
-	// Save resources... rather than possibly query the db in get_user, we grab all users, assign them to an array, and go through that when we need to.
+	// Save resources... rather than possibly query the db in get_user, we grab all users, assign them
+	// to an array,and go through that when we need to. Slightly inefficient for huge numbers of members
+	// but when a new method comes about I will use that,
 	$query = $db->write_query(sprintf("SELECT * FROM `%susers`", TABLE_PREFIX));
+
+	if($permissions['can_protect'])
+	{
+		eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
+	}
+	if(function_exists('myalerts_is_installed') && myalerts_is_installed()) {
+		$un = '';
+		if(in_array($mybb->user['uid'], explode(',', $wiki['watching'])))
+		{
+			$un = "un";
+			$lang->wiki_watch = $lang->wiki_unwatch;
+		}
+		eval("\$watch_bit = \"".$templates->get("wiki_watch_button")."\";");
+	}
 
 	$users = array();
 	while($row = $db->fetch_array($query))
@@ -651,6 +746,7 @@ elseif($mybb->input['action'] == 'contributors')
 	}
 
 	$article = $db->fetch_array($query);
+	$wiki = $article; // backwards compatibility
 
 	$contributors = explode(",", $article['authors']);
 
@@ -666,6 +762,92 @@ elseif($mybb->input['action'] == 'contributors')
 	eval("\$page = \"".$templates->get("wiki_contributors")."\";");
 
 	output_page($page);
+}
+elseif($mybb->input['action'] == 'watch')
+{
+	if(!function_exists('myalerts_is_installed') || !myalerts_is_installed())
+	{
+		error($lang->wiki_myalerts_not_installed);
+	}
+
+	$id = (int)$mybb->input['id'];
+
+	$query = $db->write_query(sprintf("SELECT watching FROM `%swiki` WHERE `id`='{$id}'", TABLE_PREFIX));
+
+	if($db->num_rows($query) === 0)
+	{
+		error($lang->doesntexist);
+	}
+
+	$wiki = $db->fetch_array($query);
+
+	$plugins->run_hooks('wiki_watch_start');
+
+	if($wiki['watching'] != null)
+	{
+		$watching = explode(',',$wiki['watching']);
+
+		if(in_array($mybb->user['uid'], $watching)) {
+			error($lang->wiki_already_watching);
+		}
+	}
+
+	if($wiki['watching'] == null)
+	{
+		$wiki['watching']= $mybb->user['uid'];
+	}
+	else
+	{
+		$wiki['watching'] .= ",{$mybb->user['uid']}";
+	}
+
+	$db->write_query(sprintf("UPDATE `%swiki` SET `watching`='{$wiki['watching']}' WHERE `id`='{$id}'", TABLE_PREFIX));
+
+	$plugins->run_hooks('wiki_watch_end');
+
+	redirect("wiki.php", $lang->wiki_now_watching);
+}
+elseif($mybb->input['action'] == 'unwatch')
+{
+	if(!function_exists('myalerts_is_installed') || !myalerts_is_installed())
+	{
+		error($lang->wiki_myalerts_not_installed);
+	}
+
+	$id = (int)$mybb->input['id'];
+
+	$query = $db->write_query(sprintf("SELECT watching FROM `%swiki` WHERE `id`='{$id}'", TABLE_PREFIX));
+
+	if($db->num_rows($query) === 0)
+	{
+		error($lang->doesntexist);
+	}
+
+	$wiki = $db->fetch_array($query);
+
+	$plugins->run_hooks('wiki_unwatch_start');
+
+	if($wiki['watching'] != null)
+	{
+		$watching = explode(',',$wiki['watching']);
+
+		if(!in_array($mybb->user['uid'], $watching)) {
+			error($lang->wiki_not_already_watching);
+		}
+
+		$pointer = array_search($mybb->user['uid'], $watching);
+
+		unset($watching[$pointer]);
+
+		$watching = implode(',', $watching);
+
+	}
+
+	$db->write_query(sprintf("UPDATE `%swiki` SET `watching`='{$watching}' WHERE `id`='{$id}'", TABLE_PREFIX));
+
+	$plugins->run_hooks('wiki_unwatch_end');
+
+	redirect("wiki.php", $lang->wiki_now_not_watching);
 }
 
 ?>

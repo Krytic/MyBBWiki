@@ -22,30 +22,50 @@ $page->output_nav_tabs($sub_tabs, 'wiki_perms');
 
 if($mybb->request_method == "post")
 {
-	$db->write_query('TRUNCATE TABLE '.TABLE_PREFIX.'wiki_perms');
-
 	$cache_array = array();
+
+	$query = $db->write_query("SELECT * FROM `" . TABLE_PREFIX . "usergroups`");
+	$cache_arr = array();
+
+	while($group = $db->fetch_array($query))
+	{
+		if(!isset($mybb->input['perm'][$group['gid']]))
+		{
+			$mybb->input['perm'][$group['gid']] = array(
+				'can_view'		=> 1,		// I don't know why it's expecting 1 instead of zero to indicate no permission
+				'can_create'	=> 1,		// but it works, so let's go with it.
+				'can_edit'		=> 1,
+				'can_protect'	=> 1,
+				'can_export'	=> 1
+				);
+		}
+	}
 
 	foreach($mybb->input['perm'] as $gid => $perms)
 	{
 		$row = array(
-			"gid"			=>	(int)$gid,
-			"can_view"		=>	in_array('can_view', $perms),
-			"can_create"	=>	in_array('can_create', $perms),
-			"can_edit"		=>	in_array('can_edit', $perms),
-			"can_protect"	=>	in_array('can_protect', $perms),
-			"can_export"	=>	in_array('can_export', $perms)
+			"can_view"		=>	(in_array('can_view', $perms) ? 1 : 0),
+			"can_create"	=>	(in_array('can_create', $perms) ? 1 : 0),
+			"can_edit"		=>	(in_array('can_edit', $perms) ? 1 : 0),
+			"can_protect"	=>	(in_array('can_protect', $perms) ? 1 : 0),
+			"can_export"	=>	(in_array('can_export', $perms) ? 1 : 0)
 			);
 
 		$cache_array["gid_{$gid}"] = array(
-				"can_view"		=>	in_array('can_view', $perms),
-				"can_create"	=>	in_array('can_create', $perms),
-				"can_edit"		=>	in_array('can_edit', $perms),
-				"can_protect"	=>	in_array('can_protect', $perms),
-				"can_export"	=>	in_array('can_export', $perms)
+			"can_view"		=>	(in_array('can_view', $perms) ? 1 : 0),
+			"can_create"	=>	(in_array('can_create', $perms) ? 1 : 0),
+			"can_edit"		=>	(in_array('can_edit', $perms) ? 1 : 0),
+			"can_protect"	=>	(in_array('can_protect', $perms) ? 1 : 0),
+			"can_export"	=>	(in_array('can_export', $perms) ? 1 : 0)
 			);
 
-		$db->insert_query('wiki_perms', $row);
+		$gid = (int) $gid;
+		$setstr = "";
+		foreach($row as $k => $v) {
+			$setstr .= "`{$k}`='{$v}', ";
+		}
+		$setstr = rtrim($setstr, ', ');
+		$db->write_query(sprintf("UPDATE `%swiki_perms` SET {$setstr} WHERE `gid`='{$gid}'", TABLE_PREFIX));
 	}
 
 	$cache->update('wiki_permissions', $cache_array);

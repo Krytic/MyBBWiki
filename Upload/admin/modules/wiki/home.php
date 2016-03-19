@@ -62,7 +62,7 @@ else if ($mybb->input['action'] == "version_check")
 
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Not ideal in the least but we're not passing sensitive data. See: http://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
-	curl_setopt($ch, CURLOPT_USERAGENT, 'MyBBWiki by Krytic Update Checker. https://github.com/Krytic');
+	curl_setopt($ch, CURLOPT_USERAGENT, 'MyBBWiki by Krytic Update Checker. Project URL: https://github.com/Krytic Sender URL: ' . $mybb->settings['bb_url']);
 	curl_setopt($ch, CURLOPT_URL, $updateurl);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	$data = curl_exec($ch);
@@ -76,13 +76,25 @@ else if ($mybb->input['action'] == "version_check")
 		$table->construct_header($lang->sprintf($lang->wiki_new_version, $latest_release['tag_name']), array("colspan" => 2));
 		$table->construct_row();
 
-		$table->construct_cell($latest_release['body']);
-		$table->construct_cell("<a href=\"{$latest_release['html_url']}\">" . $lang->new_release_download . "</a>", array('class' => 'align_center'));
+		require_once MYBB_ROOT.'inc/plugins/wiki/markdown/markdown.php';
+		$upgrading_instructions = Markdown(file_get_contents(MYBB_ROOT . 'inc/plugins/wiki/upgrading.md'));
+
+		$table->construct_cell(nl2br($latest_release['body']));
+		$table->construct_cell($upgrading_instructions, array('width' => '50%'));
+		$table->construct_row();
+
+		if(strpos($latest_release['body'], 'Upgrader: Yes') !== false) {
+			$table->construct_cell($lang->wiki_updater_required, array('class' => 'align_center', 'style' => 'font-weight: bold; font-size: 16pt; color: red;'));
+		}
+		else {
+			$table->construct_cell($lang->wiki_updater_not_required, array('class' => 'align_center', 'style' => 'font-weight: bold; font-size: 16pt; color: green;'));
+		}
+		$table->construct_cell("<a href=\"{$latest_release['html_url']}\">" . $lang->new_release_download . "</a>", array('class' => 'align_center', 'style' => 'font-size: 16pt; font-weight: bold;', 'rowspan' => 4));
 		$table->construct_row();
 	}
 	else {
-		$table->construct_cell($lang->wiki_updates, array("class" => "align_center"));
-		$table->construct_row();
+		flash_message($lang->wiki_updates, 'success');
+		admin_redirect("index.php?module=wiki");
 	}
 
 	$table->output($lang->wiki_updates_header);
