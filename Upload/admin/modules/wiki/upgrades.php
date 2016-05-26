@@ -53,10 +53,14 @@ foreach($dir as $file) {
 		$class = pathinfo($file->getFilename(), PATHINFO_FILENAME);
 		$upgrader = new $class;
 
+		if(!$upgrader->validate()) {
+			continue;
+		}
+
 		$info = $upgrader->info();
 
 		$table->construct_cell('v' . $info['version'], array('class' => 'align_center'));
-		$table->construct_cell($info['desc'], array('class' => 'align_center'));
+		$table->construct_cell($info['desc'] . "<br /><strong>WARNING: " . $info['warning'] . "</strong>", array('class' => 'align_center'));
 		$table->construct_cell("<a href=\"index.php?module=wiki-upgrades&amp;upgrade={$class}\">Run</a>", array('class' => 'align_center'));
 		$table->construct_row();
 

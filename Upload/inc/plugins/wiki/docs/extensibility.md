@@ -1,4 +1,4 @@
-<meta>title:Extensibility|code:extensibility|desc:MyBB Wiki's extensibility</meta>
+<meta>title:Extensibility|code:extensibility|desc:This document describes the extensibility features present in MyBB Wiki.</meta>
 
 # Extensibility
 
@@ -14,7 +14,8 @@ Hooks are inserted in various parts of the plugin, all of them are prefixed with
 
 ## Languages
 
-Here is a complete list of translations available for MyBB Wiki:
+Here is a complete list of languages available for MyBB Wiki. They are included in the latest releases; you just need to switch your board to using them:
 
 - English
 - Persian
+- Polish

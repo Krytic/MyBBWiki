@@ -167,7 +167,7 @@ elseif($mybb->input['action'] == 'new')
 			'protected' => $protected,
 			'lastauthor' => $db->escape_string($mybb->user['username']),
 			'lastauthorid' => $db->escape_string($mybb->user['uid']),
-			'category' => $db->escape_string($category)
+			'category' => (int)$category
 			);
 
 		$db->insert_query('wiki', $arr);
@@ -194,7 +194,7 @@ elseif($mybb->input['action'] == 'new')
 	$options = array();
 	while($row = $db->fetch_array($query))
 	{
-		$options[$row['title']] = $row['title'];
+		$options[$row['cid']] = $row['title'];
 	}
 
 	$form_container->output_row($lang->wiki_new_cat, $lang->wiki_new_cat_desc, $form->generate_select_box('category', $options, '', array('id' => 'category', 'size' => '1')));

@@ -90,6 +90,7 @@ elseif($mybb->input['action'] == 'add')
 		$form = new Form('', 'POST', '', 0, '', false, '');
 		$form_container = new FormContainer($lang->wiki_categories_add);
 		$form_container->output_row($lang->wiki_cat_title, $lang->wiki_cat_title_desc, $form->generate_text_box('cat_title', "", array('id' => 'title')), 'title');
+		$form_container->output_row($lang->wiki_cat_desc, $lang->wiki_cat_desc_desc, $form->generate_text_box('cat_desc', "", array('id' => 'desc')), 'desc');
 		$form_container->end();
 		$buttons = array();
 		$buttons[] = $form->generate_submit_button($lang->wiki_commit);
@@ -133,6 +134,7 @@ elseif($mybb->input['action'] == 'edit')
 		$form = new Form('', 'POST', '', 0, '', false, '');
 		$form_container = new FormContainer($lang->wiki_categories_edit);
 		$form_container->output_row($lang->wiki_cat_title, $lang->wiki_cat_title_desc, $form->generate_text_box('cat_title', $category['title'], array('id' => 'title')), 'title');
+		$form_container->output_row($lang->wiki_cat_desc, $lang->wiki_cat_desc_desc, $form->generate_text_box('cat_desc', $category['description'], array('id' => 'desc')), 'desc');
 		$form_container->end();
 		$buttons = array();
 		$buttons[] = $form->generate_submit_button($lang->wiki_commit);
@@ -150,8 +152,9 @@ elseif($mybb->input['action'] == 'edit')
 		else
 		{
 			$title = $db->escape_string($mybb->input['cat_title']);
+			$desc = $db->escape_string($mybb->input['cat_desc']);
 
-			$query = $db->write_query(sprintf("UPDATE `%swiki_categories` SET `title`='{$title}' WHERE `cid`='" . $id . "'", TABLE_PREFIX));
+			$query = $db->write_query(sprintf("UPDATE `%swiki_categories` SET `title`='{$title}', `description`='{$desc}' WHERE `cid`='" . $id . "'", TABLE_PREFIX));
 			if(!$query)
 			{
 				flash_message($lang->wiki_error, 'error');

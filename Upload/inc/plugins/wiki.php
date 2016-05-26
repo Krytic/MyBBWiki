@@ -16,12 +16,18 @@ if (!defined('IN_MYBB'))
 	die('Direct initialization of this file is not allowed.<br /><br />Please make sure IN_MYBB is defined.');
 }
 
-define("WIKI_VERSION", "1.1.1"); // cheeky placement means that we're able to access this constant from anywhere.
+define("WIKI_VERSION", "1.2.0"); // cheeky placement means that we're able to access this constant from anywhere.
 
 $plugins->add_hook('global_start', 'wiki_global_start');
 $plugins->add_hook('fetch_wol_activity_end', 'wiki_fetch_wol');
 $plugins->add_hook('build_friendly_wol_location_end', 'wiki_build_friendly');
 $plugins->add_hook('parse_message', 'wiki_parse_mycode');
+$plugins->add_hook('admin_user_groups_add_commit_end', 'wiki_admin_user_groups_add_commit_end');
+$plugins->add_hook('admin_user_groups_delete_commit_end', 'wiki_admin_user_groups_delete_commit_end');
+
+/**
+ * Generic plugin functions.
+ */
 
 function wiki_info()
 {
@@ -148,6 +154,9 @@ function wiki_activate()
 			$db->insert_query("templates", $ins);
 		}
 	}
+
+	require_once MYBB_ROOT."/inc/adminfunctions_templates.php";
+	find_replace_templatesets("header", "#".preg_quote("{\$menu_portal}")."#i", "{\$menu_portal}{\$menu_wiki}");
 }
 
 function wiki_deactivate()
@@ -155,6 +164,9 @@ function wiki_deactivate()
 	global $db;
 
 	$db->delete_query("templates", "title LIKE 'wiki_%' AND sid='-2'");
+
+	require_once MYBB_ROOT."/inc/adminfunctions_templates.php";
+	find_replace_templatesets("header", "#".preg_quote("{\$menu_wiki}")."#i", "");
 }
 
 // thank you to pavemen for the following two functions! :-)
@@ -211,10 +223,6 @@ function wiki_fetch_wol(&$user_activity)
 		elseif($parameters['action'] == 'diff')
 		{
 			$user_activity['activity'] = "wiki_diff";
-		}
-		elseif($parameters['action'] == 'category_listing')
-		{
-			$user_activity['activity'] = "wiki_category_listing";
 		}
 		elseif($parameters['action'] == 'contributors')
 		{
@@ -287,23 +295,25 @@ function wiki_parse_mycode(&$message)
 
 function wiki_do_mycode_with_id($matches)
 {
-	global $cache;
+	global $cache, $lang;
 
 	$articles = $cache->read('wiki_articles');
 
 	$name = $articles[$matches[1]];
 
-	return "<a href=\"wiki.php?action=view&id={$matches[1]}\" class=\"wiki_link\">{$name}</a>";
+	return "<a href=\"wiki.php?action=view&id={$matches[1]}\" class=\"wiki_link\">Wiki: {$name}</a>";
 }
 
 /**
  * GLOBAL START
  * Builds a list of links for the wiki -- for instance WIKI_URL holds the base URL for the wiki wherever you are. loaded globally.
+ * This needs updating at some point
  * Also handles MyAlerts formatting
  */
 function wiki_global_start()
 {
-	global $mybb, $lang;
+	global $mybb, $lang, $menu_wiki, $templates;
+	$lang->load('wiki'); // Just in case
 
 	if($mybb->settings['seourls'] == "yes" || ($mybb->settings['seourls'] == "auto" && isset($_SERVER['SEO_SUPPORT']) && $_SERVER['SEO_SUPPORT'] == 1))
 	{
@@ -344,6 +354,27 @@ function wiki_global_start()
 			new WikiCustomAlertFormatter($mybb, $lang, 'mybb_wiki_alert_code')
 			);
 	}
+
+	eval("\$menu_wiki .= \"".$templates->get("wiki_menu_item")."\";");
 }
+
+function wiki_admin_user_groups_add_commit_end() {
+	global $gid, $permission;
+
+	$permission->register_group($gid);
+}
+
+function wiki_admin_user_groups_delete_commit_end() {
+	global $usergroup, $permission;
+
+	$permission->delete_group($usergroup['gid']);
+}
+
+/**
+ * Create our handlers.
+ */
+require_once 'wiki/handlers/PermissionHandler.php';
+
+$permission = PermissionHandler::singleton();
 
 ?>

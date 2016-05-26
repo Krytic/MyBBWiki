@@ -20,7 +20,7 @@ class WikiInstaller
 				lastauthor TEXT(255),
 				lastauthorid INT(8),
 				notepad TEXT(255),
-				category TEXT(255),
+				category INT(10),
 				original TEXT
 				) ENGINE=MyISAM{$collation};", TABLE_PREFIX));
 		}
@@ -37,7 +37,8 @@ class WikiInstaller
 		{
 			$db->write_query(sprintf("CREATE TABLE %swiki_categories(
 				cid INT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-				title TEXT(255)
+				title TEXT(255),
+				description TEXT(255)
 				) ENGINE=MyISAM{$collation};", TABLE_PREFIX));
 		}
 		if (!$db->table_exists('wiki_perms'))
@@ -212,7 +213,7 @@ class WikiInstaller
 
 		$cache->update('wiki_permissions', $cache_arr);
 
-		$db->write_query("INSERT INTO " . TABLE_PREFIX . "wiki_categories(title) VALUES('Meta')");
+		$db->write_query("INSERT INTO " . TABLE_PREFIX . "wiki_categories(title, description) VALUES('Meta', 'The default Category')");
 
 		return true;
 	}

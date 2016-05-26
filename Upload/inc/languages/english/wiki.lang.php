@@ -13,6 +13,8 @@ $l['contributors'] = "Contributors to {1}";
 $l['wiki_contributors'] = "Contributors";
 $l['wiki_view'] = "View";
 $l['wiki_talk_prefix'] = "Talk: ";
+$l['wiki_categories_header'] = "Categories";
+$l['wiki_view_all'] = "View All";
 /* --- Error Messages --- */
 $l['oops'] = "The Wiki has been disabled!";
 $l['invalid_article'] = "No article exists with that id.";
@@ -66,5 +68,6 @@ $l['wiki_now_not_watching'] = "You are no longer watching this article.";
 $l['wiki_edited'] = "You have successfully edited the article.";
 /* --- Miscellaneous --- */
 $l['wiki_watching_alert_string'] = '{1} has been updated!';
+$l['wiki_no_articles'] = "There are no articles!";
 
 ?>

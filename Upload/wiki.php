@@ -5,6 +5,10 @@ require_once "global.php";
 
 $lang->load('wiki');
 
+if(!$db->table_exists('wiki')) {
+	error($lang->oops);
+}
+
 // automagic self updating $templatelist.
 $templatelist =	"";
 $dir = new DirectoryIterator(MYBB_ROOT . 'inc/plugins/wiki/templates');
@@ -35,7 +39,6 @@ while($row = $db->fetch_array($query))
 
 if(!$settings['wiki_enable'] || !isset($settings['wiki_enable']))
 {
-	// Will also be fired if the wiki isn't installed/activated, causing a pretty error page instead of SQL errors.
 	error($lang->oops);
 }
 
@@ -43,17 +46,46 @@ add_breadcrumb($lang->wiki, "wiki.php");
 
 // Okay, page has been set up. Now we determine what the user is trying to do.
 
+if($permissions['can_protect'])
+{
+	eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
+}
+if(function_exists('myalerts_is_installed') && myalerts_is_installed()) {
+
+	// terribly inefficient but it will be made more efficient soon.
+	$query = $db->write_query(sprintf("SELECT * FROM `%swiki`", TABLE_PREFIX));
+	$wiki = $db->fetch_array($query);
+
+	$un = '';
+	if(in_array($mybb->user['uid'], explode(',', $wiki['watching'])))
+	{
+		$un = "un";
+		$lang->wiki_watch = $lang->wiki_unwatch;
+	}
+	eval("\$watch_bit = \"".$templates->get("wiki_watch_button")."\";");
+}
+
+$category_desc = ""; // define it up here so it doesn't need to be defined in numerous places.
+
 if(!$mybb->input['action'])
 {
 	$query = $db->write_query(sprintf("SELECT * FROM `%swiki`", TABLE_PREFIX));
 	$wiki_articles = $db->num_rows($query);
+
+	$category_index = array();
+	$query2 = $db->write_query(sprintf("SELECT * FROM `%swiki_categories`", TABLE_PREFIX));
+
+	while($cat = $db->fetch_array($query2)) {
+		$category_index[$cat['cid']] = $cat;
+	}
 
 	if($wiki_articles > 0)
 	{
 		while($wiki = $db->fetch_array($query))
 		{
 			$wiki['lastauthor'] = build_profile_link($wiki['lastauthor'], $wiki['lastauthorid']);
-			$wiki['category_url'] = urlencode($wiki['category']);
+			$wiki['category_url'] = $wiki['category'];
+			$wiki['category'] = $category_index[$wiki['category']]['title'];
 			eval("\$wikilist .= \"".$templates->get("wiki_wikilist")."\";");
 		}
 	}
@@ -74,6 +106,13 @@ if(!$mybb->input['action'])
 	if($permissions['can_export'])
 	{
 		eval("\$exportbit = \"".$templates->get("wiki_exportbit")."\";");
+	}
+
+	$query = $db->write_query(sprintf("SELECT * FROM `%swiki_categories`", TABLE_PREFIX));
+
+	$category_bit = "";
+	while($category = $db->fetch_array($query)) {
+		eval("\$category_bit .= \"".$templates->get("wiki_category_bit")."\";");
 	}
 
 	$plugins->run_hooks("wiki_pre_eval_page");
@@ -108,19 +147,7 @@ elseif($mybb->input['action'] == 'view')
 		eval("\$protectedbit = \"".$templates->get("wiki_protectedbit")."\";");
 	}
 
-	if($permissions['can_protect'])
-	{
-		eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
-	}
-	if(function_exists('myalerts_is_installed') && myalerts_is_installed()) {
-		$un = '';
-		if(in_array($mybb->user['uid'], explode(',', $wiki['watching'])))
-		{
-			$un = "un";
-			$lang->wiki_watch = $lang->wiki_unwatch;
-		}
-		eval("\$watch_bit = \"".$templates->get("wiki_watch_button")."\";");
-	}
+
 
 	add_breadcrumb($wiki['title']);
 
@@ -184,19 +211,7 @@ elseif($mybb->input['action'] == 'talk')
 		error($lang->pickarticle);
 	}
 
-	if($permissions['can_protect'])
-	{
-		eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
-	}
-	if(function_exists('myalerts_is_installed') && myalerts_is_installed()) {
-		$un = '';
-		if(in_array($mybb->user['uid'], explode(',', $wiki['watching'])))
-		{
-			$un = "un";
-			$lang->wiki_watch = $lang->wiki_unwatch;
-		}
-		eval("\$watch_bit = \"".$templates->get("wiki_watch_button")."\";");
-	}
+
 
 	$id = (int) $mybb->input['id'];
 	$query = $db->write_query(sprintf("SELECT * FROM `%swiki` WHERE `id`='{$id}'", TABLE_PREFIX));
@@ -213,19 +228,7 @@ elseif($mybb->input['action'] == 'talk')
 		eval("\$protectedbit = \"".$templates->get("wiki_protectedbit")."\";");
 	}
 
-	if($permissions['can_protect'])
-	{
-		eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
-	}
-	if(function_exists('myalerts_is_installed') && myalerts_is_installed()) {
-		$un = '';
-		if(in_array($mybb->user['uid'], explode(',', $wiki['watching'])))
-		{
-			$un = "un";
-			$lang->wiki_watch = $lang->wiki_unwatch;
-		}
-		eval("\$watch_bit = \"".$templates->get("wiki_watch_button")."\";");
-	}
+
 
 	add_breadcrumb($wiki['title']);
 
@@ -274,7 +277,9 @@ elseif($mybb->input['action'] == 'talk')
 
 		$user = get_user($uid);
 
-		$wiki['notepad'] = str_replace("[signoff:{$uid}]", $user['username'], $wiki['notepad']);
+		$user['formatted_username'] = format_name($user['username'], $user['usergroup']);
+
+		$wiki['notepad'] = str_replace("[signoff:{$uid}]", "- " . $user['formatted_username'], $wiki['notepad']);
 
 	}
 
@@ -298,19 +303,7 @@ elseif($mybb->input['action'] == 'edit')
 		error($lang->pickarticle);
 	}
 
-	if($permissions['can_protect'])
-	{
-		eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
-	}
-	if(function_exists('myalerts_is_installed') && myalerts_is_installed()) {
-		$un = '';
-		if(in_array($mybb->user['uid'], explode(',', $wiki['watching'])))
-		{
-			$un = "un";
-			$lang->wiki_watch = $lang->wiki_unwatch;
-		}
-		eval("\$watch_bit = \"".$templates->get("wiki_watch_button")."\";");
-	}
+
 
 	$id = (int) $mybb->input['id'];
 	$info = $db->write_query(sprintf("SELECT * FROM `%swiki` WHERE `id`='{$id}'", TABLE_PREFIX));
@@ -469,7 +462,7 @@ elseif($mybb->input['action'] == 'new')
 		{
 			$selected = '';
 
-			if($category['title'] == $mybb->input['category'])
+			if($category['cid'] == $mybb->input['category'])
 			{
 				$selected = ' selected="selected"';
 			}
@@ -511,7 +504,7 @@ elseif($mybb->input['action'] == 'new')
 			// No errors? Cool.
 			$title = $db->escape_string($mybb->input['wiki_title']);
 			$message = $db->escape_string($mybb->input['message']);
-			$category = $db->escape_string($mybb->input['category']);
+			$category = (int)$mybb->input['category'];
 
 
 
@@ -520,7 +513,7 @@ elseif($mybb->input['action'] == 'new')
 			$sql = $db->write_query(
 				sprintf(
 					"INSERT INTO %swiki(authors,title,content,lastauthor,lastauthorid,category,original)
-					VALUES('{$mybb->user['uid']}','{$title}','{$message}','{$mybb->user['username']}','{$mybb->user['uid']}','{$category}','{$message}')",
+					VALUES('{$mybb->user['uid']}','{$title}','{$message}','{$mybb->user['username']}','{$mybb->user['uid']}',{$category},'{$message}')",
 					TABLE_PREFIX
 					)
 				);
@@ -567,26 +560,34 @@ elseif($mybb->input['action'] == 'protect')
 }
 elseif($mybb->input['action'] == 'categories')
 {
-	if(!isset($mybb->input['title']))
+	if(!isset($mybb->input['cid']))
 	{
 		error($lang->nocat);
 	}
 
-	add_breadcrumb($lang->wiki_filter, "wiki.php?action=categories&title=" . $mybb->input['title']);
-	add_breadcrumb($mybb->input['title'], "wiki.php?action=categories&title=" . $mybb->input['title']);
+	$cid = (int)$mybb->input['cid'];
 
-	$title = urldecode($mybb->input['title']);
-	$title = $db->escape_string($title);
-	$sql = $db->write_query(sprintf("SELECT * FROM `%swiki` WHERE `category`='{$title}'", TABLE_PREFIX));
+	$category_index = array();
+	$query = $db->write_query(sprintf("SELECT * FROM `%swiki` WHERE `category`='{$cid}'", TABLE_PREFIX));
+	$sql = $db->write_query(sprintf("SELECT * FROM `%swiki_categories`", TABLE_PREFIX));
 
-	$wiki_articles = $db->num_rows($sql);
+	while($cat = $db->fetch_array($sql)) {
+		$category_index[$cat['cid']] = $cat;
+	}
 
-	if($wiki_articles > 0)
+	$wikilist = "";
+
+	$category_desc = $category_index[$cid]['description'];
+	eval("\$category_desc = \"".$templates->get("wiki_category_desc")."\";");
+
+	if($db->num_rows($query) > 0)
 	{
-		while($wiki = $db->fetch_array($sql))
+		while($article = $db->fetch_array($query))
 		{
+			$wiki = $article;
 			$wiki['lastauthor'] = build_profile_link($wiki['lastauthor'], $wiki['lastauthorid']);
-			$wiki['category_url'] = urlencode($wiki['category_url']);
+			$wiki['category_url'] = $wiki['category'];
+			$wiki['category'] = $category_index[$wiki['category']]['title'];
 			eval("\$wikilist .= \"".$templates->get("wiki_wikilist")."\";");
 		}
 	}
@@ -596,9 +597,17 @@ elseif($mybb->input['action'] == 'categories')
 		eval("\$wikilist = \"".$templates->get("wiki_wikilist_none")."\";");
 	}
 
+
+	add_breadcrumb($lang->wiki_filter, "wiki.php?action=categories&cid=" . $mybb->input['cid']);
+
 	if($permissions['can_export'])
 	{
 		eval("\$exportbit = \"".$templates->get("wiki_exportbit")."\";");
+	}
+
+	$category_bit = "";
+	foreach($category_index as $cid => $category) {
+		eval("\$category_bit .= \"".$templates->get("wiki_category_bit")."\";");
 	}
 
 	$plugins->run_hooks("wiki_pre_eval_page");
@@ -630,45 +639,89 @@ elseif($mybb->input['action'] == 'export')
 
 		$xml .= "</wiki>";
 
-		// Send our headers...
-		header("Content-type: text/xml");
-		header('Content-Disposition: attachment; filename="wiki-exported-articles.xml"'); // This allows us to offer it as a downloadable file.
+		$timestamp = date('d-m-Y-H-i-s');
 
-		// And output the page.
-		echo $xml;
+		if($db->num_rows($sql) > 0) {
+			// Send our headers...
+			header("Content-type: text/xml");
+			header('Content-Disposition: attachment; filename="wikiarticles-' . $timestamp . '.xml"'); // This allows us to offer it as a downloadable file.
+
+			// And output the page.
+			echo $xml;
+		}
+		else {
+			error($lang->wiki_no_articles);
+		}
 	}
 	else
 	{
 		error_no_permission();
 	}
 }
-elseif($mybb->input['action'] == "diff")
+elseif($mybb->input['action'] == "diff_list")
 {
 	$aid = (int)$mybb->input['aid'];
 
-	$query = $db->write_query(sprintf("SELECT * FROM `%swiki` WHERE `id`='{$aid}'", TABLE_PREFIX));
+	$query = sprintf("SELECT * FROM `%swiki` WHERE `id`='{$aid}'", TABLE_PREFIX);
+	$query = $db->write_query($query);
+	$article = $db->fetch_array($query);
+	$wiki = $article; // backwards compatibility
+
+	$query = sprintf("SELECT * FROM `%swiki_edits` WHERE `aid`='{$aid}'", TABLE_PREFIX);
+	$query = $db->write_query($query);
 
 	if($db->num_rows($query) == 0)
 	{
 		error($lang->invalid_article);
 	}
 
-	if($permissions['can_protect'])
-	{
-		eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
+
+
+	$revision_list_bits = "";
+
+	while($edit = $db->fetch_array($query)) {
+		$author = get_user($edit['author']);
+		$edit['title'] = $author['username'];
+		eval("\$revision_list_bits .= \"".$templates->get("wiki_revision_list_bit")."\";");
 	}
-	if(function_exists('myalerts_is_installed') && myalerts_is_installed()) {
-		$un = '';
-		if(in_array($mybb->user['uid'], explode(',', $wiki['watching'])))
+
+	eval("\$page = \"".$templates->get("wiki_revision_list")."\";");
+
+	output_page($page);
+}
+elseif($mybb->input['action'] == "diff")
+{
+	$aid = (int)$mybb->input['aid'];
+
+	$query = sprintf("SELECT * FROM `%swiki` WHERE `id`='{$aid}'", TABLE_PREFIX);
+	$query = $db->write_query($query);
+
+	if(isset($mybb->input['eid']))
+	{
+		$eid = (int)$mybb->input['eid'];
+		$edit_query = sprintf("SELECT * FROM `%swiki_edits` WHERE `aid`='{$aid}' AND `eid`='{$eid}';", TABLE_PREFIX);
+		$edit_query = $db->write_query($edit_query);
+
+		if($db->num_rows($edit_query) == 0)
 		{
-			$un = "un";
-			$lang->wiki_watch = $lang->wiki_unwatch;
+			error($lang->invalid_article);
 		}
-		eval("\$watch_bit = \"".$templates->get("wiki_watch_button")."\";");
+
+		$article_edits = $db->fetch_array($edit_query);
+	}
+
+	if($db->num_rows($query) == 0)
+	{
+		error($lang->invalid_article);
 	}
 
 	$article = $db->fetch_array($query);
 	$wiki = $article; // this is for backwards compatibility
+
+	if(isset($article_edits))
+	{
+		$article['original'] = $article_edits['revision'];
+	}
 
 	require_once MYBB_ROOT . "inc/3rdparty/diff/Diff.php";
 	require_once MYBB_ROOT . "inc/3rdparty/diff/Diff/Renderer.php";
@@ -691,24 +744,6 @@ elseif($mybb->input['action'] == "diff")
 
 	output_page($page);
 }
-elseif($mybb->input['action'] == 'category_listing')
-{
-	$query = $db->write_query(sprintf("SELECT * FROM `%swiki_categories`", TABLE_PREFIX));
-
-	add_breadcrumb($lang->categories, "wiki.php?action=category_listing");
-
-	$category_list = '';
-
-	while($category = $db->fetch_array($query))
-	{
-		$url = urlencode($category['title']);
-		eval("\$category_list .= \"".$templates->get("wiki_category_item")."\";");
-	}
-
-	eval("\$page = \"".$templates->get("wiki_category_list")."\";");
-
-	output_page($page);
-}
 elseif($mybb->input['action'] == 'contributors')
 {
 	// Save resources... rather than possibly query the db in get_user, we grab all users, assign them
@@ -716,24 +751,14 @@ elseif($mybb->input['action'] == 'contributors')
 	// but when a new method comes about I will use that,
 	$query = $db->write_query(sprintf("SELECT * FROM `%susers`", TABLE_PREFIX));
 
-	if($permissions['can_protect'])
-	{
-		eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
-	}
-	if(function_exists('myalerts_is_installed') && myalerts_is_installed()) {
-		$un = '';
-		if(in_array($mybb->user['uid'], explode(',', $wiki['watching'])))
-		{
-			$un = "un";
-			$lang->wiki_watch = $lang->wiki_unwatch;
-		}
-		eval("\$watch_bit = \"".$templates->get("wiki_watch_button")."\";");
-	}
-
 	$users = array();
 	while($row = $db->fetch_array($query))
 	{
-		$users[$row['uid']] = $row['username'];
+		$users[$row['uid']] = array(
+			'username' => $row['username'],
+			'usergroup' => $row['usergroup'],
+			'displaygroup' => $row['displaygroup']
+			);
 	}
 	$db->free_result($query);
 
@@ -753,7 +778,8 @@ elseif($mybb->input['action'] == 'contributors')
 	$authors = '';
 	foreach($contributors as $uid)
 	{
-		$author = build_profile_link($users[$uid], $uid);
+		$author = format_name($users[$uid]['username'], $users[$uid]['usergroup'], $users[$uid]['displaygroup']);
+		$author = build_profile_link($author, $uid);
 
 		eval("\$authors .= \"".$templates->get("wiki_contributor_bit")."\";");
 	}

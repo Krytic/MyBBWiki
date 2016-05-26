@@ -76,6 +76,8 @@ $l['wiki_categories_add_description'] = "Add extra categories here - one for cat
 $l['wiki_commit'] = "Commit";
 $l['wiki_cat_title'] = "Category Title";
 $l['wiki_cat_title_desc'] = "What will you be calling this category?";
+$l['wiki_cat_desc'] = "Description";
+$l['wiki_cat_desc_desc'] = "Enter a short description of this category.";
 $l['wiki_cat_success'] = "{1} has been added as a category.";
 /* import.php stuff */
 $l['wiki_import'] = "Article Import";
