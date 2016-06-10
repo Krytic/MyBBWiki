@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>MyBB Wiki by Krytic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">MyBB Wiki</h1>
+      <h2 class="project-tagline">Smart, Modern, Flexible Wikis for MyBB Forum Software</h2>
+      <a href="https://github.com/Krytic/MyBBWiki" class="btn">View on GitHub</a>
+      <a href="https://github.com/Krytic/MyBBWiki/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/Krytic/MyBBWiki/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="mybb-wiki" class="anchor" href="#mybb-wiki" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>MyBB Wiki</h1>
+
+<p>MyBB Wiki is a simple, yet powerful wiki for the <a href="http://www.mybb.com">MyBB Forum Software</a>.</p>
+
+<h2>
+<a id="extensibility" class="anchor" href="#extensibility" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Extensibility</h2>
+
+<h4>
+<a id="theming" class="anchor" href="#theming" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Theming</h4>
+
+<p>MyBB Wiki contains it's own template set, inserted into your themes. It uses default MyBB classes, with a few inline elements that will be removed in a later release. You can theme it just like you'd theme any other element of MyBB.</p>
+
+<h4>
+<a id="hooking" class="anchor" href="#hooking" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Hooking</h4>
+
+<p>Hooks are inserted in various parts of the plugin, all of them are prefixed with "wiki_" so you can easily identify them if you generate a list using something like Euan's <a href="https://github.com/euantorano/MyBB-Hook-Finder">MyBB Hook Finder</a>.</p>
+
+<h4>
+<a id="languages" class="anchor" href="#languages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Languages</h4>
+
+<p>Here is a complete list of translations available for MyBB Wiki:</p>
+
+<blockquote>
+<p>English</p>
+</blockquote>
+
+<h4>
+<a id="upgrades" class="anchor" href="#upgrades" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Upgrades</h4>
+
+<p>Where possible, all upgrade scripts will be run automatically. MyBB Wiki does not, however, save backups of wiki articles for you. This must be done with the Import/Export function inside your Admin CP's Wiki module and on the article list before an upgrade or reinstall. As much as possible is saved in this process.</p>
+
+<p>Upgrades also reset your settings and categories. Exported articles have the category in them and it has not (yet) been tested how the articles react with a non-existent category, but it should be only a minor issue.</p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>MyBB Wiki comes with it's own self-contained Markdown Parser, which is from <a href="michelf.ca/projects/php-markdown/classic/">Michel Fortin</a>. If you're not familiar with the syntax, I highly recommend you read the <a href="daringfireball.net/projects/markdown/syntax">DaringFireball Guide</a>.</p>
+
+<p>MyBB Wiki also inserts two new MyCodes into your forum. They are used like so: <code>[[aid]]</code> and <code>[wiki=aid]</code> where <code>aid</code> is the aid of the Wiki Article you wish to link. This is the number that follows <code>id=</code> in the URL of a wiki page.</p>
+
+<p>A link is not added pointing to the wiki, you must add that yourself. :)</p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p><a href="creativecommons.org/licenses/by-nc-sa/3.0/">Original Code is licensed under Creative Commons Attribution NonCommercial ShareAlike 3.0 Unported.</a>
+Some code has been used from other people and this is noted where applicable.
+The license for the Markdown parser is available at <code>Upload/inc/plugins/wiki/markdown-license.txt</code>.</p>
+
+<p><strong>This plugin is not affiliated with or related to Stefan-T's plugin of the same name.</strong></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/Krytic/MyBBWiki">MyBB Wiki</a> is maintained by <a href="https://github.com/Krytic">Krytic</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
