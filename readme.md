@@ -17,6 +17,8 @@ Hooks are inserted in various parts of the plugin, all of them are prefixed with
 Here is a complete list of translations available for MyBB Wiki:
 
 > English
+> Persian
+> Polish
 
 #### Upgrades
 

@@ -373,8 +373,10 @@ function wiki_admin_user_groups_delete_commit_end() {
 /**
  * Create our handlers.
  */
-require_once 'wiki/handlers/PermissionHandler.php';
+if(wiki_is_installed()) {
+	require_once 'wiki/handlers/PermissionHandler.php';
 
-$permission = PermissionHandler::singleton();
+	$permission = PermissionHandler::singleton();
+}
 
 ?>
