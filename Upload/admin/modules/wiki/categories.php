@@ -100,8 +100,9 @@ elseif($mybb->input['action'] == 'add')
 	else
 	{
 		$name = $db->escape_string($mybb->input['cat_title']);
+		$desc = $db->escape_string($mybb->input['cat_desc']);
 
-		$query = $db->write_query("INSERT INTO " . TABLE_PREFIX . "wiki_categories(title) VALUES('" . $name . "')");
+		$query = $db->write_query("INSERT INTO " . TABLE_PREFIX . "wiki_categories(title, description) VALUES('{$name}', '{$desc}')");
 
 		if(!$query)
 		{

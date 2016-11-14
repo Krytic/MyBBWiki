@@ -143,7 +143,7 @@ function wiki_activate()
 			// And so the fun begins.
 
 			$ins = array(
-				"tid"		=>	NULL,
+				"tid"		=>	0,
 				"title"		=>	"wiki_" . $file->getBasename('.html'),
 				"template"	=>	$db->escape_string(file_get_contents($file->getPathname())),
 				"sid"		=>	"-2",

@@ -147,8 +147,6 @@ elseif($mybb->input['action'] == 'view')
 		eval("\$protectedbit = \"".$templates->get("wiki_protectedbit")."\";");
 	}
 
-
-
 	add_breadcrumb($wiki['title']);
 
 	if($settings['wiki_mybbparser'])
@@ -386,11 +384,8 @@ elseif($mybb->input['action'] == 'edit')
 
 		$sql = $db->write_query(
 			sprintf(
-				"UPDATE `%swiki`
-				SET `content`='{$message}', `authors`='{$authors}', `lastauthor`='{$mybb->user['username']}', `lastauthorid`='{$mybb->user['uid']}', `notepad`='{$notes}'
-				WHERE `id`='{$id}'", TABLE_PREFIX
-				)
-			);
+				"UPDATE `%swiki`", TABLE_PREFIX) . "SET `content`='{$message}', `authors`='{$authors}', `lastauthor`='{$mybb->user['username']}', `lastauthorid`='{$mybb->user['uid']}', `notepad`='{$notes}'
+				WHERE `id`='{$id}'");
 
 		$sql = $db->write_query(sprintf("INSERT INTO %swiki_edits(`aid`,`author`,`revision`) VALUES('{$id}','{$mybb->user['uid']}','{$message}')", TABLE_PREFIX));
 
@@ -577,7 +572,7 @@ elseif($mybb->input['action'] == 'categories')
 
 	$wikilist = "";
 
-	$category_desc = $category_index[$cid]['description'];
+	$category_desc = $lang->sprintf($lang->wiki_now_viewing, $category_index[$cid]['title'], $category_index[$cid]['description']);
 	eval("\$category_desc = \"".$templates->get("wiki_category_desc")."\";");
 
 	if($db->num_rows($query) > 0)
