@@ -1,0 +1,21 @@
+# Ignore all files apart from sub directories
+*
+!*/
+
+# This file
+!.gitignore
+
+# Wiki page
+!wiki.php
+
+# Language files
+!inc/languages/english/wiki.lang.php
+!inc/languages/english/admin/wiki.lang.php
+
+# Plugin files
+!inc/plugins/wiki.php
+!inc/plugins/wiki/*
+!admin/modules/wiki/*
+
+# Build and sublime text files
+!README.md
