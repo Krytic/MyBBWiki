@@ -44,9 +44,7 @@ function wiki_info()
 	if(wiki_is_installed())
 	{
 		$append .= "<br />";
-		$append .= "<a href=\"index.php?module=wiki-settings\"><strong>[Settings]</strong></a>";
-		$append .= " <a href=\"index.php?module=wiki-perms\"><strong>[Permissions]</strong></a>";
-		$append .= " <a href=\"index.php?module=wiki-docs\"><strong>[Docs]</strong></a>";
+		$append .= " <a href=\"http://mybbwiki.readthedocs.io/en/latest/\"><strong>[Documentation]</strong></a>";
 	}
 
 	return array(
