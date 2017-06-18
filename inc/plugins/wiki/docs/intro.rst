@@ -10,4 +10,4 @@ Once downloaded, unzip it and upload the contents to your server.
 
 Log into MyBB, enter the Admin CP, and go Config > Plugins > Wiki > Install & Activate. The Wiki will autoinstall, and set up configuration and permissions. Then you can edit the permissions to your heart's content!
 
-To see more, visit `Configuration`_.
+To see more, visit the doc on Configuration.

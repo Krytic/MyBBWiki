@@ -9,5 +9,6 @@ Contents
 .. toctree::
 
    intro
+   config
 
 .. _GitHub: https://github.com/Krytic/MyBBWiki/
