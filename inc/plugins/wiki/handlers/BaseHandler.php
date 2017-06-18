@@ -21,18 +21,6 @@ abstract class BaseHandler {
         $this->mybb = $mybb;
         $this->cache = $cache;
 
-        try {
-            $this->_validate_self($cache_to_validate);
-        }
-        catch(Exception $e) {
-            try {
-                $this->_repair();
-            }
-            catch(Exception $f) {
-                error($f);
-            }
-        }
-
         $this->constructor();
     }
 
@@ -40,7 +28,5 @@ abstract class BaseHandler {
         return array('db', 'mybb', 'cache');
     }
 
-    abstract protected function _validate_self($cache_to_validate);
-    abstract protected function _repair();
     abstract protected function constructor();
 }

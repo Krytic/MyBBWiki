@@ -10,33 +10,6 @@ class PermissionHandler extends BaseHandler {
 		$this->permissions = $permissions["gid_{$mybb->user['usergroup']}"];
 	}
 
-	protected function _validate_self($cache_to_validate) {
-		$actions = $this->get_actions();
-
-		$perms = $this->permissions; // so we can be more brutal.
-
-		foreach($actions as $action) {
-			if(in_array($action, $this->permissions)) {
-				unset($perms[$action]);
-			}
-		}
-
-		if(count($perms) > 1) {
-			if(count($this->permissions) > count($actions)) {
-				// check actions
-				$errno = 200;
-			}
-			else {
-				$errno = 201;
-			}
-			throw new Exception("Cache / Database Mismatch with the wiki", $errno);
-		}
-	}
-
-	protected function _repair() {
-		// TBD
-	}
-
 	public function register_group($gid) {
 		$gid = intval($gid);
 		// Set the default permissions
@@ -56,9 +29,9 @@ class PermissionHandler extends BaseHandler {
 
 	public function delete_group($gid) {
 		$gid = intval($gid);
-		$this->db->write_query(sprintf("DELETE FROM `%swiki_perms` WHERE `gid`='{$gid}'"), TABLE_PREFIX);
+		$this->db->write_query(sprintf("DELETE FROM `%swiki_perms` WHERE `gid`='{$gid}'", TABLE_PREFIX));
 
-		$cache_arr['gid_' . $gid] = "";
+		unset($cache_arr['gid_' . $gid]);
 		$this->cache->update('wiki_permissions', $cache_arr);
 	}
 
