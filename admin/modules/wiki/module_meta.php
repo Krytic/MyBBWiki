@@ -23,7 +23,7 @@ function wiki_meta()
 	$sub_menu['35'] = array("id" => "plugin", "title" => $lang->nav_plugin_pane, "link" => "index.php?module=config-plugins#mybbwiki");
 	$sub_menu['40'] = array("id" => "templates", "title" => $lang->nav_templates, "link" => "index.php?module=wiki-templates");
 	$sub_menu['45'] = array("id" => "upgrades", "title" => $lang->nav_upgrades, "link" => "index.php?module=wiki-upgrades");
-	$sub_menu['150'] = array("id" => "docs", "title" => $lang->nav_docs, "link" => "index.php?module=wiki-docs");
+	$sub_menu['150'] = array("id" => "docs", "title" => $lang->nav_docs, "link" => "http://mybbwiki.readthedocs.io/en/latest/");
 
 	$sub_menu = $plugins->run_hooks("admin_wiki_menu", $sub_menu);
 
