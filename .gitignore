@@ -15,6 +15,8 @@
 # Plugin files
 !inc/plugins/wiki.php
 !inc/plugins/wiki/*
+!inc/plugins/wiki/*/*
+!inc/plugins/wiki/*/*/*
 !admin/modules/wiki/*
 
 # Build and sublime text files
