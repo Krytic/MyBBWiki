@@ -183,6 +183,8 @@ elseif($mybb->input['action'] == 'view')
 
 	$template_list = $db->write_query(sprintf("SELECT * FROM `%swiki_templates`", TABLE_PREFIX));
 
+	$db->write_query(sprintf("UPDATE %swiki SET views=views+1 WHERE id=" . $wiki['id'], TABLE_PREFIX));
+
 	if($db->num_rows($template_list) > 0)
 	{
 		while($template = $db->fetch_array($template_list))

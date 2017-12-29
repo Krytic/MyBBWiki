@@ -111,10 +111,10 @@ $l['wiki_templates_replace'] = "Replacement";
 $l['wiki_no_templates'] = "There are no templates defined on your wiki.";
 $l['wiki_templates'] = "Templates";
 $l['wiki_templates_new'] = "New Template";
-$l['wiki_templates_description'] = "Here you can define templates to use in your wiki. Templates are strings that transform into more complex designs on parsing; for instance, {{foo}} might be transformed into &lt;div class=\"foo\"&gt;&lt;strong&gt;FOOBAR!&lt;/strong&gt;&lt;/div&gt;.";
+$l['wiki_templates_description'] = "Here you can define templates to use in your wiki. Templates are strings that transform into more complex designs on parsing; for instance, {{foo}} might be transformed into &lt;strong&gt;bar&lt;/strong&gt;.";
 $l['wiki_templates_new_description'] = "Create a new template on your wiki.";
 $l['wiki_new_template_title'] = "Template Title";
-$l['wiki_new_template_title_desc'] = "Internal use only, not shown to the end user.";
+$l['wiki_new_template_title_desc'] = "Internal use only, not shown to non-admins.";
 $l['wiki_new_template_search'] = "Search String";
 $l['wiki_new_template_search_desc'] = "The {{ and }} is added automatically - you do not need to add it here. ie a search pattern of \"foo\" would need to be written as {{foo}} to be parsed. A search pattern of \"{{foo}}\" would need to be written as {{{{foo}}}} to be parsed.";
 $l['wiki_new_template_replace'] = "Replacement";
@@ -149,5 +149,6 @@ $l['wiki_updater_required'] = "Upgrader Required";
 $l['wiki_updater_not_required'] = "Upgrader not Required";
 $l['wiki_check_for_updates'] = "<h2><a href=\"index.php?module=wiki&action=version_check\">Check for updates</a></h2>";
 $l['wiki_version'] = "<h2>Version {1}</h2>";
+$l['wiki_welcome_message'] = "Welcome to MyBB Wiki!";
 
 ?>

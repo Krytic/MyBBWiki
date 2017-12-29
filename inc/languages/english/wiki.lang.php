@@ -16,6 +16,7 @@ $l['wiki_talk_prefix'] = "Talk: ";
 $l['wiki_categories_header'] = "Categories";
 $l['wiki_view_all'] = "View All";
 $l['wiki_now_viewing'] = "Now viewing: {1} &mdash; {2}";
+$l['wiki_views'] = "view(s)";
 /* --- Error Messages --- */
 $l['oops'] = "The Wiki has been disabled!";
 $l['invalid_article'] = "No article exists with that id.";

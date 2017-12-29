@@ -20,6 +20,7 @@ class WikiInstaller
 				lastauthor TEXT(255),
 				lastauthorid INT(8),
 				notepad TEXT(255),
+				views BIGINT NOT NULL DEFAULT '0',
 				category INT(10),
 				original TEXT
 				) ENGINE=MyISAM{$collation};", TABLE_PREFIX));
@@ -179,7 +180,7 @@ class WikiInstaller
 
 	public function go()
 	{
-		global $db, $cache;
+		global $db, $cache, $mybb, $lang;
 
 		if(function_exists('wiki_is_installed') && wiki_is_installed()) {
 			return false;
@@ -214,6 +215,21 @@ class WikiInstaller
 		$cache->update('wiki_permissions', $cache_arr);
 
 		$db->write_query("INSERT INTO " . TABLE_PREFIX . "wiki_categories(title, description) VALUES('Meta', 'The default Category')");
+
+		$message = $db->escape_string(file_get_contents(MYBB_ROOT . "inc/plugins/wiki/default_article.md"));
+
+		$sql = $db->write_query(
+			sprintf(
+				"INSERT INTO %swiki(authors,title,content,lastauthor,lastauthorid,category,original)
+				VALUES('{$mybb->user['uid']}','{$lang->wiki_welcome_message}','{$message}','{$mybb->user['username']}','{$mybb->user['uid']}',1,'{$message}')",
+				TABLE_PREFIX
+			)
+		);
+
+		$updates = $cache->read('wiki_articles');
+		$updates[$db->insert_id()] = $title;
+
+		$cache->update('wiki_articles', $updates);
 
 		return true;
 	}
