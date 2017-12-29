@@ -193,6 +193,11 @@ elseif($mybb->input['action'] == 'view')
 		}
 	}
 
+	$talk_bit = "";
+	if($settings['wiki_talk_enabled']) {
+		eval("\$talk_bit = \"" . $templates->get("wiki_article_talk_bit") . "\";");
+	}
+
 	$plugins->run_hooks("wiki_view");
 
 	eval("\$page = \"".$templates->get("wiki_article")."\";");
@@ -211,6 +216,10 @@ elseif($mybb->input['action'] == 'talk')
 		error($lang->pickarticle);
 	}
 
+	if(!$settings['wiki_talk_enabled'])
+	{
+		error($lang->wiki_talk_disabled);
+	}
 
 
 	$id = (int) $mybb->input['id'];
@@ -337,6 +346,11 @@ elseif($mybb->input['action'] == 'edit')
 
 		$plugins->run_hooks("wiki_edit_form");
 
+		$talk_bit = "";
+		if($settings['wiki_talk_enabled']) {
+			eval("\$talk_bit = \"" . $templates->get("wiki_article_talk_bit") . "\";");
+		}
+
 		eval("\$page = \"".$templates->get("wiki_article_edit")."\";");
 
 		output_page($page);
@@ -387,7 +401,7 @@ elseif($mybb->input['action'] == 'edit')
 		$sql = $db->write_query(
 			sprintf(
 				"UPDATE `%swiki`", TABLE_PREFIX) . "SET `content`='{$message}', `authors`='{$authors}', `lastauthor`='{$mybb->user['username']}', `lastauthorid`='{$mybb->user['uid']}', `notepad`='{$notes}'
-				WHERE `id`='{$id}'");
+			WHERE `id`='{$id}'");
 
 		$sql = $db->write_query(sprintf("INSERT INTO %swiki_edits(`aid`,`author`,`revision`) VALUES('{$id}','{$mybb->user['uid']}','{$message}')", TABLE_PREFIX));
 
@@ -512,8 +526,8 @@ elseif($mybb->input['action'] == 'new')
 					"INSERT INTO %swiki(authors,title,content,lastauthor,lastauthorid,category,original)
 					VALUES('{$mybb->user['uid']}','{$title}','{$message}','{$mybb->user['username']}','{$mybb->user['uid']}',{$category},'{$message}')",
 					TABLE_PREFIX
-					)
-				);
+				)
+			);
 
 			$updates = $cache->read('wiki_articles');
 			$updates[$db->insert_id()] = $title;
@@ -673,13 +687,17 @@ elseif($mybb->input['action'] == "diff_list")
 	}
 
 
-
 	$revision_list_bits = "";
 
 	while($edit = $db->fetch_array($query)) {
 		$author = get_user($edit['author']);
 		$edit['title'] = $author['username'];
 		eval("\$revision_list_bits .= \"".$templates->get("wiki_revision_list_bit")."\";");
+	}
+
+	$talk_bit = "";
+	if($settings['wiki_talk_enabled']) {
+		eval("\$talk_bit = \"" . $templates->get("wiki_article_talk_bit") . "\";");
 	}
 
 	eval("\$page = \"".$templates->get("wiki_revision_list")."\";");
@@ -737,6 +755,11 @@ elseif($mybb->input['action'] == "diff")
 	add_breadcrumb($lang->wiki_revisions, "wiki.php");
 	add_breadcrumb($article['title'], "wiki.php?action=diff&amp;aid={$aid}");
 
+	$talk_bit = "";
+	if($settings['wiki_talk_enabled']) {
+		eval("\$talk_bit = \"" . $templates->get("wiki_article_talk_bit") . "\";");
+	}
+
 	eval("\$page = \"".$templates->get("wiki_revision_article")."\";");
 
 	output_page($page);
@@ -755,7 +778,7 @@ elseif($mybb->input['action'] == 'contributors')
 			'username' => $row['username'],
 			'usergroup' => $row['usergroup'],
 			'displaygroup' => $row['displaygroup']
-			);
+		);
 	}
 	$db->free_result($query);
 
@@ -782,6 +805,12 @@ elseif($mybb->input['action'] == 'contributors')
 	}
 
 	$lang->contributors = $lang->sprintf($lang->contributors, $article['title']);
+
+	$talk_bit = "";
+	if($settings['wiki_talk_enabled']) {
+		eval("\$talk_bit = \"" . $templates->get("wiki_article_talk_bit") . "\";");
+	}
+
 	eval("\$page = \"".$templates->get("wiki_contributors")."\";");
 
 	output_page($page);

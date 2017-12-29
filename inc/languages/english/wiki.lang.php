@@ -18,7 +18,7 @@ $l['wiki_view_all'] = "View All";
 $l['wiki_now_viewing'] = "Now viewing: {1} &mdash; {2}";
 $l['wiki_views'] = "view(s)";
 /* --- Error Messages --- */
-$l['oops'] = "The Wiki has been disabled!";
+$l['oops'] = "The Wiki is currently closed pending maintenance. If you think this is an error, contact the Board Administrator.";
 $l['invalid_article'] = "No article exists with that id.";
 $l['identical'] = "The two articles are identical!";
 $l['noarticles'] = "There are no articles on this wiki. <a href=\"wiki.php?action=new\">Why don't you create one?</a>";
@@ -39,6 +39,7 @@ $l['noarticlescat'] = "There are no articles in this category.";
 $l['wiki_myalerts_not_installed'] = "Watching Articles is not available.";
 $l['wiki_already_watching'] = "You are already watching this article.";
 $l['wiki_not_already_watching'] = "You are already not watching this article.";
+$l['wiki_talk_disabled'] = "The talk page has been disabled.";
 /* --- Buttons and Options --- */
 $l['title'] = "Article Title";
 $l['content'] = "Article Content";

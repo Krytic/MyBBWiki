@@ -155,6 +155,16 @@ class WikiInstaller
 			'value'        => 1,
 			);
 		$db->insert_query('wiki_settings', $insert_array);
+
+		$insert_array = array(
+			'name'        => 'wiki_talk_enabled',
+			'title'            => 'Enable Talk Page?',
+			'optionscode'    => 'yesno',
+			'value'        => 1,
+			);
+		$db->insert_query('wiki_settings', $insert_array);
+
+		rebuild_settings();
 	}
 
 	private function handleMyAlerts()
@@ -188,7 +198,6 @@ class WikiInstaller
 
 		$this->buildTables();
 		$this->insertSettings();
-		rebuild_settings();
 
 		$this->insertCSS();
 
