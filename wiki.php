@@ -46,10 +46,6 @@ add_breadcrumb($lang->wiki, "wiki.php");
 
 // Okay, page has been set up. Now we determine what the user is trying to do.
 
-if($permissions['can_protect'])
-{
-	eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
-}
 if(function_exists('myalerts_is_installed') && myalerts_is_installed()) {
 
 	// terribly inefficient but it will be made more efficient soon.
@@ -142,9 +138,16 @@ elseif($mybb->input['action'] == 'view')
 
 	$wiki = $db->fetch_array($query);
 
+	$protectedbit = $protect_opt = '';
+
 	if($wiki['protected'])
 	{
 		eval("\$protectedbit = \"".$templates->get("wiki_protectedbit")."\";");
+	}
+	
+	if($permissions['can_protect'] && !$wiki['protected'])
+	{
+		eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
 	}
 
 	add_breadcrumb($wiki['title']);
