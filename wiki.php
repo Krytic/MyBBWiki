@@ -406,7 +406,8 @@ elseif($mybb->input['action'] == 'edit')
 				"UPDATE `%swiki`", TABLE_PREFIX) . "SET `content`='{$message}', `authors`='{$authors}', `lastauthor`='{$mybb->user['username']}', `lastauthorid`='{$mybb->user['uid']}', `notepad`='{$notes}'
 			WHERE `id`='{$id}'");
 
-		$sql = $db->write_query(sprintf("INSERT INTO %swiki_edits(`aid`,`author`,`revision`) VALUES('{$id}','{$mybb->user['uid']}','{$message}')", TABLE_PREFIX));
+
+		$sql = $db->write_query(sprintf("INSERT INTO %swiki_edits", TABLE_PREFIX) . "(`aid`,`author`,`revision`) VALUES('{$id}','{$mybb->user['uid']}','{$message}')");
 
 		if(class_exists('MybbStuff_MyAlerts_AlertTypeManager'))
 		{
