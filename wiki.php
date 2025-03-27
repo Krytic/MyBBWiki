@@ -144,7 +144,7 @@ elseif($mybb->input['action'] == 'view')
 	{
 		eval("\$protectedbit = \"".$templates->get("wiki_protectedbit")."\";");
 	}
-	
+
 	if($permissions['can_protect'] && !$wiki['protected'])
 	{
 		eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
@@ -179,9 +179,10 @@ elseif($mybb->input['action'] == 'view')
 
 	if($settings['wiki_markdown'])
 	{
-		require_once MYBB_ROOT.'inc/plugins/wiki/markdown/markdown.php';
+		require_once MYBB_ROOT.'inc/plugins/wiki/markdown2/MarkdownInterface.inc.php';
+		require_once MYBB_ROOT.'inc/plugins/wiki/markdown2/Markdown.php';
 
-		$wiki['content'] = Markdown($wiki['content']);
+		$wiki['content'] = \Michelf\Markdown::defaultTransform($wiki['content']);
 	}
 
 	$template_list = $db->write_query(sprintf("SELECT * FROM `%swiki_templates`", TABLE_PREFIX));
@@ -271,9 +272,10 @@ elseif($mybb->input['action'] == 'talk')
 
 	if($settings['wiki_markdown'])
 	{
-		require_once MYBB_ROOT.'inc/plugins/wiki/markdown/markdown.php';
+		require_once MYBB_ROOT.'inc/plugins/wiki/markdown2/MarkdownInterface.inc.php';
+		require_once MYBB_ROOT.'inc/plugins/wiki/markdown2/Markdown.php';
 
-		$wiki['notepad'] = Markdown($wiki['notepad']);
+		$wiki['notepad'] = \Michelf\Markdown::defaultTransform($wiki['notepad']);
 	}
 
 	preg_match_all("/(signoff:[0-9]*)/", $wiki['notepad'], $matches);
