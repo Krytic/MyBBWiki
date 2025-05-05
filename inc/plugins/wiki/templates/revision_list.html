@@ -5,15 +5,16 @@
 </head>
 <body>
 	{$header}
-	<ul class="btn-group">
-		<li><a href="wiki.php?action=view&amp;id={$wiki['id']}">{$lang->wiki_view}</a></li>
+	<div class="float_right">
+		<a href="wiki.php?action=view&amp;id={$wiki['id']}" class="button new_thread_button">{$lang->wiki_view}</a>
 		{$protect_opt}
-		<li><a href="wiki.php?action=edit&amp;id={$wiki['id']}">{$lang->edit}</a></li>
-		<li><a href="wiki.php?action=diff&amp;aid={$wiki['id']}">{$lang->wiki_revisions}</a></li>
-		<li><a href="wiki.php?action=contributors&amp;id={$wiki['id']}">{$lang->wiki_contributors}</a></li>
+		<a href="wiki.php?action=edit&amp;id={$wiki['id']}" class="button new_thread_button">{$lang->edit}</a>
+		<a href="wiki.php?action=diff&amp;aid={$wiki['id']}" class="button new_thread_button">{$lang->wiki_revisions}</a>
+		<a href="wiki.php?action=contributors&amp;id={$wiki['id']}" class="button new_thread_button">{$lang->wiki_contributors}</a>
 		{$talk_bit}
 		{$watch_bit}
-	</ul>
+	</div>
+
 	<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
 		<tr>
 			<td class="thead" colspan="2">
