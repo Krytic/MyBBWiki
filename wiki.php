@@ -154,6 +154,9 @@ elseif($mybb->input['action'] == 'view')
 		eval("\$protect_opt = \"".$templates->get("wiki_protect")."\";");
 	}
 
+	$query2 = $db->write_query(sprintf("SELECT title FROM `%swiki_categories` WHERE cid=" . $wiki['category'] . " LIMIT 1", TABLE_PREFIX));
+
+	add_breadcrumb($db->fetch_array($query2)['title'], $url='wiki.php?action=categories&cid=' . $wiki['category']);
 	add_breadcrumb($wiki['title']);
 
 	if($settings['wiki_mybbparser'])
