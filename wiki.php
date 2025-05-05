@@ -10,7 +10,7 @@ require_once "global.php";
 $lang->load('wiki');
 
 if(!$db->table_exists('wiki')) {
-	error($lang->oops);
+	error($lang->wiki_oops);
 }
 
 // automagic self updating $templatelist.
@@ -43,7 +43,7 @@ while($row = $db->fetch_array($query))
 
 if(!$settings['wiki_enable'] || !isset($settings['wiki_enable']))
 {
-	error($lang->oops);
+	error($lang->wiki_oops);
 }
 
 add_breadcrumb($lang->wiki, "wiki.php");
@@ -93,11 +93,11 @@ if(!$mybb->input['action'])
 	{
 		if($mybb->user['uid'])
 		{
-			$error_message = $lang->noarticles;
+			$error_message = $lang->wiki_noarticles;
 		}
 		else
 		{
-			$error_message = $lang->noarticles_guest;
+			$error_message = $lang->wiki_noarticles_guest;
 		}
 
 		eval("\$wikilist = \"".$templates->get("wiki_wikilist_none")."\";");
@@ -129,7 +129,7 @@ elseif($mybb->input['action'] == 'view')
 
 	if(!isset($mybb->input['id']))
 	{
-		error($lang->pickarticle);
+		error($lang->wiki_pickarticle);
 	}
 
 	$id = (int) $mybb->input['id'];
@@ -137,7 +137,7 @@ elseif($mybb->input['action'] == 'view')
 
 	if($db->num_rows($query) == 0)
 	{
-		error($lang->doesntexist);
+		error($lang->wiki_doesntexist);
 	}
 
 	$wiki = $db->fetch_array($query);
@@ -222,7 +222,7 @@ elseif($mybb->input['action'] == 'talk')
 
 	if(!isset($mybb->input['id']))
 	{
-		error($lang->pickarticle);
+		error($lang->wiki_pickarticle);
 	}
 
 	if(!$settings['wiki_talk_enabled'])
@@ -236,7 +236,7 @@ elseif($mybb->input['action'] == 'talk')
 
 	if($db->num_rows($query) == 0)
 	{
-		error($lang->doesntexist);
+		error($lang->wiki_doesntexist);
 	}
 
 	$wiki = $db->fetch_array($query);
@@ -326,7 +326,7 @@ elseif($mybb->input['action'] == 'edit')
 
 	if(!isset($mybb->input['id']))
 	{
-		error($lang->pickarticle);
+		error($lang->wiki_pickarticle);
 	}
 
 
@@ -338,17 +338,17 @@ elseif($mybb->input['action'] == 'edit')
 
 	if($mybb->request_method != "post")
 	{
-		add_breadcrumb($lang->sprintf($lang->editing, $article['title']));
+		add_breadcrumb($lang->sprintf($lang->wiki_editing, $article['title']));
 
 		if($db->num_rows($info) == 0)
 		{
-			error($lang->doesntexist);
+			error($lang->wiki_doesntexist);
 		}
 
 		if($article['protected'] && !$mybb->usergroup['canmodcp'])
 		{
 			// Moderators can always edit protected articles.
-			error($lang->protected);
+			error($lang->wiki_protected);
 		}
 
 		$existing_content = $article['content'];
@@ -446,7 +446,7 @@ elseif($mybb->input['action'] == 'edit')
 
 		if(!$sql)
 		{
-			error($lang->notupdated);
+			error($lang->wiki_notupdated);
 		}
 		else
 		{
@@ -473,7 +473,7 @@ elseif($mybb->input['action'] == 'new')
 			$message = htmlspecialchars_uni($mybb->input['message']);
 		}
 
-		add_breadcrumb($lang->new);
+		add_breadcrumb($lang->wiki_new);
 
 		if($settings['wiki_mycode_editor'] && !$settings['wiki_markdown'])
 		{
@@ -515,15 +515,15 @@ elseif($mybb->input['action'] == 'new')
 
 		if(!$mybb->input['category'])
 		{
-			$errors[] = $lang->nocategory;
+			$errors[] = $lang->wiki_nocategory;
 		}
 		if(!$mybb->input['message'])
 		{
-			$errors[] = $lang->nomessage;
+			$errors[] = $lang->wiki_nomessage;
 		}
 		if(!$mybb->input['wiki_title'])
 		{
-			$errors[] = $lang->notitle;
+			$errors[] = $lang->wiki_notitle;
 		}
 
 		if($errors)
@@ -556,11 +556,11 @@ elseif($mybb->input['action'] == 'new')
 
 			if(!$sql)
 			{
-				error($lang->notposted);
+				error($lang->wiki_notposted);
 			}
 			else
 			{
-				redirect("wiki.php", $lang->posted);
+				redirect("wiki.php", $lang->wiki_posted);
 			}
 		}
 	}
@@ -580,12 +580,12 @@ elseif($mybb->input['action'] == 'protect')
 
 		if(!$sql)
 		{
-			error($lang->notprotected);
+			error($lang->wiki_notprotected);
 		}
 		else
 		{
 			$id = (int) $mybb->input['id'];
-			redirect("wiki.php?action=view&id=$id", $lang->wasprotected);
+			redirect("wiki.php?action=view&id=$id", $lang->wiki_wasprotected);
 		}
 	}
 }
@@ -593,7 +593,7 @@ elseif($mybb->input['action'] == 'categories')
 {
 	if(!isset($mybb->input['cid']))
 	{
-		error($lang->nocat);
+		error($lang->wiki_nocat);
 	}
 
 	$cid = (int)$mybb->input['cid'];
@@ -624,7 +624,7 @@ elseif($mybb->input['action'] == 'categories')
 	}
 	else
 	{
-		$error_message = $lang->noarticlescat;
+		$error_message = $lang->wiki_noarticlescat;
 		eval("\$wikilist = \"".$templates->get("wiki_wikilist_none")."\";");
 	}
 
@@ -703,7 +703,7 @@ elseif($mybb->input['action'] == "diff_list")
 
 	if($db->num_rows($query) == 0)
 	{
-		error($lang->invalid_article);
+		error($lang->wiki_invalid_article);
 	}
 
 
@@ -739,7 +739,7 @@ elseif($mybb->input['action'] == "diff")
 
 		if($db->num_rows($edit_query) == 0)
 		{
-			error($lang->invalid_article);
+			error($lang->wiki_invalid_article);
 		}
 
 		$article_edits = $db->fetch_array($edit_query);
@@ -747,7 +747,7 @@ elseif($mybb->input['action'] == "diff")
 
 	if($db->num_rows($query) == 0)
 	{
-		error($lang->invalid_article);
+		error($lang->wiki_invalid_article);
 	}
 
 	$article = $db->fetch_array($query);
@@ -769,7 +769,7 @@ elseif($mybb->input['action'] == "diff")
 
 	if($article['original'] == $article['content'])
 	{
-		$diff_report = $lang->identical;
+		$diff_report = $lang->wiki_identical;
 	}
 
 	add_breadcrumb($lang->wiki_revisions, "wiki.php");
@@ -807,7 +807,7 @@ elseif($mybb->input['action'] == 'contributors')
 
 	if($db->num_rows($query) == 0)
 	{
-		error($lang->invalid_article);
+		error($lang->wiki_invalid_article);
 	}
 
 	$article = $db->fetch_array($query);
@@ -824,7 +824,7 @@ elseif($mybb->input['action'] == 'contributors')
 		eval("\$authors .= \"".$templates->get("wiki_contributor_bit")."\";");
 	}
 
-	$lang->contributors = $lang->sprintf($lang->contributors, $article['title']);
+	$lang->wiki_contributors = $lang->sprintf($lang->wiki_contributors, $article['title']);
 
 	$talk_bit = "";
 	if($settings['wiki_talk_enabled']) {
@@ -848,7 +848,7 @@ elseif($mybb->input['action'] == 'watch')
 
 	if($db->num_rows($query) === 0)
 	{
-		error($lang->doesntexist);
+		error($lang->wiki_doesntexist);
 	}
 
 	$wiki = $db->fetch_array($query);
@@ -892,7 +892,7 @@ elseif($mybb->input['action'] == 'unwatch')
 
 	if($db->num_rows($query) === 0)
 	{
-		error($lang->doesntexist);
+		error($lang->wiki_doesntexist);
 	}
 
 	$wiki = $db->fetch_array($query);

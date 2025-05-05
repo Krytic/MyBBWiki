@@ -89,7 +89,7 @@ else if ($mybb->input['action'] == "version_check")
 		else {
 			$table->construct_cell($lang->wiki_updater_not_required, array('class' => 'align_center', 'style' => 'font-weight: bold; font-size: 16pt; color: green;'));
 		}
-		$table->construct_cell("<a href=\"{$latest_release['html_url']}\">" . $lang->new_release_download . "</a>", array('class' => 'align_center', 'style' => 'font-size: 16pt; font-weight: bold;', 'rowspan' => 4));
+		$table->construct_cell("<a href=\"{$latest_release['html_url']}\">" . $lang->wiki_new_release_download . "</a>", array('class' => 'align_center', 'style' => 'font-size: 16pt; font-weight: bold;', 'rowspan' => 4));
 		$table->construct_row();
 	}
 	else {

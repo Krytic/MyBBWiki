@@ -41,14 +41,14 @@ if (!$mybb->input['action'])
 			{
 				$table->construct_cell($article['title'], array('class' => 'align_center'));
 
-				$table->construct_cell("<a href=\"index.php?module=wiki-articles&amp;action=delete&amp;id={$article['id']}&amp;my_post_key={$mybb->post_code}&amp;name={$article['title']}\">{$lang->delete}</a>", array('class' => 'align_center'));
+				$table->construct_cell("<a href=\"index.php?module=wiki-articles&amp;action=delete&amp;id={$article['id']}&amp;my_post_key={$mybb->post_code}&amp;name={$article['title']}\">{$lang->wiki_delete}</a>", array('class' => 'align_center'));
 				if(!$article['protected'])
 				{
-					$table->construct_cell("<a href=\"index.php?module=wiki-articles&amp;action=protect&amp;id={$article['id']}&amp;my_post_key={$mybb->post_code}&amp;name={$article['title']}\">{$lang->protect}</a>", array('class' => 'align_center'));
+					$table->construct_cell("<a href=\"index.php?module=wiki-articles&amp;action=protect&amp;id={$article['id']}&amp;my_post_key={$mybb->post_code}&amp;name={$article['title']}\">{$lang->wiki_protect}</a>", array('class' => 'align_center'));
 				}
 				else
 				{
-					$table->construct_cell("<a href=\"index.php?module=wiki-articles&amp;action=unprotect&amp;id={$article['id']}&amp;my_post_key={$mybb->post_code}&amp;name={$article['title']}\">{$lang->unprotect}</a>", array('class' => 'align_center'));
+					$table->construct_cell("<a href=\"index.php?module=wiki-articles&amp;action=unprotect&amp;id={$article['id']}&amp;my_post_key={$mybb->post_code}&amp;name={$article['title']}\">{$lang->wiki_unprotect}</a>", array('class' => 'align_center'));
 				}
 
 				$table->construct_row();
