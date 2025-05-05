@@ -1,5 +1,9 @@
 <?php
 
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
 define('IN_MYBB', 1);
 require_once "global.php";
 
@@ -179,9 +183,11 @@ elseif($mybb->input['action'] == 'view')
 
 	if($settings['wiki_markdown'])
 	{
-		require_once MYBB_ROOT.'inc/plugins/wiki/markdown/markdown.php';
+		require_once MYBB_ROOT.'inc/plugins/wiki/markdown/parsedown.php';
 
-		$wiki['content'] = Markdown($wiki['content']);
+		$Parsedown = new Parsedown();
+
+		$wiki['content'] = $Parsedown->text($wiki['content']);
 	}
 
 	$template_list = $db->write_query(sprintf("SELECT * FROM `%swiki_templates`", TABLE_PREFIX));
@@ -271,9 +277,11 @@ elseif($mybb->input['action'] == 'talk')
 
 	if($settings['wiki_markdown'])
 	{
-		require_once MYBB_ROOT.'inc/plugins/wiki/markdown/markdown.php';
+		require_once MYBB_ROOT.'inc/plugins/wiki/markdown/parsedown.php';
 
-		$wiki['notepad'] = Markdown($wiki['notepad']);
+		$Parsedown = new Parsedown();
+
+		$wiki['notepad'] = $Parsedown->text($wiki['notepad']);
 	}
 
 	preg_match_all("/(signoff:[0-9]*)/", $wiki['notepad'], $matches);
@@ -298,6 +306,12 @@ elseif($mybb->input['action'] == 'talk')
 	$wiki['notes'] = $wiki['notepad']; // backwards compatibility, will be removed in a future commit
 
 	$plugins->run_hooks("wiki_view_notes");
+
+	$talk_bit = "";
+
+	if($settings['wiki_talk_enabled']) {
+		eval("\$talk_bit = \"" . $templates->get("wiki_article_talk_bit") . "\";");
+	}
 
 	eval("\$page = \"".$templates->get("wiki_notes")."\";");
 
@@ -400,6 +414,8 @@ elseif($mybb->input['action'] == 'edit')
 		$notes = $db->escape_string($mybb->input['notes']);
 
 		$notes = str_replace("~~~~", "[signoff:{$mybb->user['uid']}]", $notes);
+
+		// We should have a condition in here so that if someone @s someone, it sends them a notification.
 
 		$sql = $db->write_query(
 			sprintf(
