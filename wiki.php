@@ -189,9 +189,17 @@ elseif($mybb->input['action'] == 'view')
 		require_once MYBB_ROOT.'inc/plugins/wiki/markdown/parsedown.php';
 
 		$Parsedown = new Parsedown();
-
+		$wiki['content'] = str_replace("&gt;", ">", $wiki['content']); // TODO: Hacky fix, and exploitable
 		$wiki['content'] = $Parsedown->text($wiki['content']);
+
 	}
+
+	require_once MYBB_ROOT.'inc/plugins/wiki/toc/Toc.php';
+
+	$toc = new ashtaev\Toc($wiki['content']);
+
+	$wiki_toc = $toc->getToc();
+	$wiki['content'] = $toc->getPost();
 
 	$template_list = $db->write_query(sprintf("SELECT * FROM `%swiki_templates`", TABLE_PREFIX));
 
@@ -283,7 +291,7 @@ elseif($mybb->input['action'] == 'talk')
 		require_once MYBB_ROOT.'inc/plugins/wiki/markdown/parsedown.php';
 
 		$Parsedown = new Parsedown();
-
+		$wiki['notepad'] = str_replace("&gt;", ">", $wiki['notepad']); // TODO: Hacky fix, and exploitable
 		$wiki['notepad'] = $Parsedown->text($wiki['notepad']);
 	}
 

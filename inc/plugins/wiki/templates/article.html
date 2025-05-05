@@ -10,7 +10,7 @@
 	<div class="float_right">
 		<a href="wiki.php?action=view&amp;id={$wiki['id']}" class="button new_thread_button">{$lang->wiki_view}</a>
 		{$protect_opt}
-		<a href="wiki.php?action=edit&amp;id={$wiki['id']}" class="button new_thread_button">{$lang->wiki_edit}</a>
+		<a href="wiki.php?action=edit&amp;id={$wiki['id']}" class="button new_thread_button">{$lang->wiki_edit_button}</a>
 		<a href="wiki.php?action=diff&amp;aid={$wiki['id']}" class="button new_thread_button">{$lang->wiki_revisions}</a>
 		<a href="wiki.php?action=contributors&amp;id={$wiki['id']}" class="button new_thread_button">{$lang->wiki_contributors}</a>
 		{$talk_bit}
@@ -19,18 +19,28 @@
 
 
 	<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
-		<tr>
-			<td class="thead">
-				<span>
-					<strong>{$wiki['title']}</strong> &mdash; {$wiki['views']} {$lang->wiki_views}
-				</span>
-			</td>
-		</tr>
+		<thead>
+			<tr>
+				<td class="thead" colspan='2'>
+					<span>
+						<strong>{$wiki['title']}</strong> &mdash; {$wiki['views']} {$lang->wiki_views}
+					</span>
+				</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="tcat">{$lang->wiki_content}</td>
+				<td class="tcat">{$lang->wiki_table_of_contents}</td>
 		<tr>
 			<td class="trow1">
 				{$wiki['content']}
 			</td>
+			<td class="trow1" valign="top">
+				{$wiki_toc}
+			</td>
 		</tr>
+	</tbody>
 	</table>
 	{$footer}
 </body>

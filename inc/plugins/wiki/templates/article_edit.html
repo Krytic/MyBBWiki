@@ -1,47 +1,51 @@
 <html>
-<head>
-	<title>{$mybb->settings['bbname']} - {$lang->wiki}</title>
-	{$headerinclude}
-</head>
-<body>
-	{$header}
+	<head>
+		<title>{$mybb->settings['bbname']} - {$lang->wiki}</title>
+		{$headerinclude}
+	  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css" />
+	  <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+	</head>
+	<body>
+		{$header}
 
-	<div class="float_right">
-		<a href="wiki.php?action=view&amp;id={$wiki['id']}" class="button new_thread_button">{$lang->wiki_view}</a>
-		{$protect_opt}
-		<a href="wiki.php?action=edit&amp;id={$wiki['id']}" class="button new_thread_button">{$lang->wiki_edit}</a>
-		<a href="wiki.php?action=diff&amp;aid={$wiki['id']}" class="button new_thread_button">{$lang->wiki_revisions}</a>
-		<a href="wiki.php?action=contributors&amp;id={$wiki['id']}" class="button new_thread_button">{$lang->wiki_contributors}</a>
-		{$talk_bit}
-		{$watch_bit}
-	</div>
+		<div class="float_right">
+			<a href="wiki.php?action=view&amp;id={$wiki['id']}" class="button new_thread_button">{$lang->wiki_view}</a>
+			{$protect_opt}
+			<a href="wiki.php?action=edit&amp;id={$wiki['id']}" class="button new_thread_button">{$lang->wiki_edit_button}</a>
+			<a href="wiki.php?action=diff&amp;aid={$wiki['id']}" class="button new_thread_button">{$lang->wiki_revisions}</a>
+			<a href="wiki.php?action=contributors&amp;id={$wiki['id']}" class="button new_thread_button">{$lang->wiki_contributors}</a>
+			{$talk_bit}
+			{$watch_bit}
+		</div>
 
-	<form action="" method="post">
-		<input type="hidden" name="my_post_key" id="my_post_key" value="{$mybb->post_code}" />
-		<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
-			<tr>
-				<td class="thead" colspan="2"><span><strong>{$lang->wiki_edit}</td>
-			</tr>
-			<tr>
-				<td class="trow1">
-					<strong>{$lang->wiki_content}</strong>
-				</td>
-				<td class="trow1">
-					<textarea rows="20" cols="70" name="message" id="message">{$existing_content}</textarea>
-					{$codebuttons}
-				</td>
-			</tr>
-			<tr>
-				<td class="trow2">
-					<strong>{$lang->wiki_notes}</strong>
-				</td>
-				<td class="trow2">
-					<textarea rows="20" cols="70" name="notes" id="notes">{$article['notepad']}</textarea>
-				</td>
-			</tr>
-		</table>
-		<div style="text-align:center"><input type="submit" class="button" value="{$lang->wiki_edit}" accesskey="s" /></div>
-	</form>
-	{$footer}
-</body>
+		<form action="" method="post">
+			<input type="hidden" name="my_post_key" id="my_post_key" value="{$mybb->post_code}" />
+			<table border="0" cellspacing="{$theme['borderwidth']}" cellpadding="{$theme['tablespace']}" class="tborder">
+				<tr>
+					<td class="thead" colspan="2"><span><strong>{$lang->wiki_edit}</td>
+				</tr>
+				<tr>
+					<td class="trow1" colspan="2">
+						<textarea rows="20" cols="70" name="message" id="message">{$existing_content}</textarea>
+						{$codebuttons}
+					</td>
+				</tr>
+				<tr>
+					<td class="trow2">
+						<strong>{$lang->wiki_notes}</strong>
+					</td>
+					<td class="trow2">
+						<textarea rows="20" cols="70" name="notes" id="notes">{$article['notepad']}</textarea>
+					</td>
+				</tr>
+			</table>
+			<div style="text-align:center"><input type="submit" class="button" value="{$lang->wiki_edit_button}" accesskey="s" /></div>
+		</form>
+	    <script>
+	      const easymde = new EasyMDE({
+	        element: document.getElementById('message'),
+	      });
+	    </script>
+		{$footer}
+	</body>
 </html>

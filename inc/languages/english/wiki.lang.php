@@ -43,10 +43,11 @@ $l['wiki_talk_disabled'] = "The talk page has been disabled.";
 /* --- Buttons and Options --- */
 $l['wiki_title'] = "Article Title";
 $l['wiki_content'] = "Article Content";
+$l['wiki_table_of_contents'] = "Table of Contents";
 $l['wiki_category'] = "Article Category";
-$l['wiki_new'] = "New Article";
+$l['wiki_create'] = "New Article";
 $l['wiki_post'] = "Post Article";
-$l['wiki_edit'] = "Edit Article";
+$l['wiki_edit_button'] = "Edit Article";
 $l['wiki_editing'] = "Editing {1}";
 $l['wiki_lastpost'] = "Last Editor";
 $l['wiki_protect'] = "Protect Article";
