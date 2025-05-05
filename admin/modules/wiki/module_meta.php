@@ -14,15 +14,21 @@ function wiki_meta()
 
 	$sub_menu = array();
 
-	$sub_menu['5'] = array("id" => "home", "title" => $lang->wiki, "link" => "index.php?module=wiki-home");
-	$sub_menu['10'] = array("id" => "articles", "title" => $lang->wiki_nav_articles, "link" => "index.php?module=wiki-articles");
-	$sub_menu['15'] = array("id" => "categories", "title" => $lang->wiki_nav_cat, "link" => "index.php?module=wiki-categories");
-	$sub_menu['20'] = array("id" => "import", "title" => $lang->wiki_nav_import, "link" => "index.php?module=wiki-import");
-	$sub_menu['25'] = array("id" => "perms", "title" => $lang->wiki_nav_perms, "link" => "index.php?module=wiki-perms");
-	$sub_menu['30'] = array("id" => "settings", "title" => $lang->wiki_nav_settings, "link" => "index.php?module=wiki-settings");
-	$sub_menu['35'] = array("id" => "plugin", "title" => $lang->wiki_nav_plugin_pane, "link" => "index.php?module=config-plugins#mybbwiki");
-	$sub_menu['40'] = array("id" => "templates", "title" => $lang->wiki_nav_templates, "link" => "index.php?module=wiki-templates");
-	$sub_menu['45'] = array("id" => "upgrades", "title" => $lang->wiki_nav_upgrades, "link" => "index.php?module=wiki-upgrades");
+	$submenu_options = array('home', 'articles', 'categories', 'import', 'perms', 'settings', 'plugin', 'templates', 'upgrades');
+
+	for ($i=0; $i < count($submenu_options) ; $i++) {
+		$selected_option = $submenu_options[$i];
+
+	 if(check_admin_permissions(array("module" => 'wiki',
+                             				"action" => $selected_option),
+															$error=false)) {
+
+	 	$lang_string = 'wiki_nav_' . $selected_option;
+
+	 	$sub_menu[(string) 5*($i+1)] = array("id" => $selected_option, "title" => $lang->$lang_string, "link" => "index.php?module=wiki-" . $selected_option);
+	 }
+	}
+
 	$sub_menu['150'] = array("id" => "docs", "title" => $lang->wiki_nav_docs, "link" => "http://mybbwiki.readthedocs.io/en/latest/");
 
 	$sub_menu = $plugins->run_hooks("admin_wiki_menu", $sub_menu);
@@ -72,10 +78,11 @@ function wiki_admin_permissions()
 		"articles"		=> $lang->wiki_can_manage_articles,
 		"categories"	=> $lang->wiki_can_manage_categories,
 		"import"		=> $lang->wiki_can_manage_imports,
-		"permissions"	=> $lang->wiki_can_manage_perms,
+		"perms"	=> $lang->wiki_can_manage_perms,
 		"settings"		=> $lang->wiki_can_manage_settings,
 		"docs"			=> $lang->wiki_can_manage_docs,
-		"upgrades"		=> $lang->wiki_can_upgrade
+		"upgrades"		=> $lang->wiki_can_upgrade,
+		"templates" => $lang->wiki_can_manage_templates
 	);
 
 	$admin_permissions = $plugins->run_hooks("admin_wiki_permissions", $admin_permissions);

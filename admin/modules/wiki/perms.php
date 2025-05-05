@@ -10,6 +10,9 @@ $lang->load('wiki');
 
 $page->add_breadcrumb_item($lang->wiki_perms, 'index.php?module=wiki-perms');
 
+check_admin_permissions(array("module" => 'wiki',
+                              "action" => 'permissions'));
+
 $page->output_header($lang->wiki_perms);
 
 $sub_tabs['wiki_perms'] = array(

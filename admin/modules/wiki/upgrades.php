@@ -10,6 +10,9 @@ $lang->load('wiki');
 
 $page->add_breadcrumb_item($lang->wiki_upgrades, 'index.php?module=wiki-docs');
 
+check_admin_permissions(array("module" => 'wiki',
+                              "action" => 'upgrades'));
+
 $page->output_header($lang->wiki_upgrades);
 
 $sub_tabs['wiki_upgrades'] = array(

@@ -10,6 +10,9 @@ $lang->load('wiki');
 
 $page->add_breadcrumb_item($lang->wiki_settings, 'index.php?module=wiki-settings');
 
+check_admin_permissions(array("module" => 'wiki',
+                              "action" => 'settings'));
+
 $page->output_header($lang->wiki_settings);
 
 $sub_tabs['wiki_settings'] = array(

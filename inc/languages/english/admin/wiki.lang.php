@@ -2,21 +2,24 @@
 
 /* module_meta stuff */
 $l['wiki'] = "Wiki";
-$l['wiki_nav_articles'] = "All Articles";
 $l['wiki_can_manage_articles'] = "Can manage Wiki Articles";
 $l['wiki_can_manage_categories'] = "Can manage Wiki Categories";
 $l['wiki_can_manage_imports'] = "Can import Wiki Articles";
 $l['wiki_can_manage_perms'] = "Can manage Wiki Permissions";
 $l['wiki_can_manage_settings'] = "Can manage Wiki settings";
 $l['wiki_can_manage_docs'] = "Can read the Wiki Documentation";
+$l['wiki_can_manage_templates'] = "Can manage wiki templates";
 $l['wiki_can_upgrade'] = "Can run the Upgraders";
+
+$l['wiki_nav_home'] = "Home";
+$l['wiki_nav_articles'] = "All Articles";
 $l['wiki_nav_docs'] = "Documentation";
 $l['wiki_nav_updates'] = "Updates";
-$l['wiki_nav_cat'] = "Categories";
+$l['wiki_nav_categories'] = "Categories";
 $l['wiki_nav_import'] = "Article Import";
 $l['wiki_nav_perms'] = "Permissions";
 $l['wiki_nav_settings'] = "Settings";
-$l['wiki_nav_plugin_pane'] = "View in Plugin Manager";
+$l['wiki_nav_plugin'] = "View in Plugin Manager";
 $l['wiki_nav_templates'] = "Templates";
 $l['wiki_nav_upgrades'] = "Upgrades";
 /* articles.php stuff */

@@ -10,6 +10,9 @@ $lang->load('wiki');
 
 $page->add_breadcrumb_item($lang->wiki_categories, 'index.php?module=wiki-categories');
 
+check_admin_permissions(array("module" => 'wiki',
+                              "action" => 'categories'));
+
 $page->output_header($lang->wiki_categories);
 
 $sub_tabs['wiki_categories'] = array(

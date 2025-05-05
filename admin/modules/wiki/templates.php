@@ -10,6 +10,9 @@ $lang->load('wiki');
 
 $page->add_breadcrumb_item($lang->wiki_templates, 'index.php?module=wiki-templates');
 
+check_admin_permissions(array("module" => 'wiki',
+                              "action" => 'templates'));
+
 $page->output_header($lang->wiki_templates);
 
 $sub_tabs['wiki_templates'] = array(

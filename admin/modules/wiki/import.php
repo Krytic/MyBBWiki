@@ -10,6 +10,9 @@ $lang->load('wiki');
 
 $page->add_breadcrumb_item($lang->wiki_import, 'index.php?module=wiki-import');
 
+check_admin_permissions(array("module" => 'wiki',
+                              "action" => 'import'));
+
 $page->output_header($lang->wiki_import);
 
 $sub_tabs['wiki_import'] = array(

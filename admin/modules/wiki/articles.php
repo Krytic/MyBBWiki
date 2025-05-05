@@ -10,6 +10,9 @@ $lang->load('wiki');
 
 $page->add_breadcrumb_item($lang->wiki_articles, 'index.php?module=wiki-articles');
 
+check_admin_permissions(array("module" => 'wiki',
+                              "action" => 'articles'));
+
 $page->output_header($lang->wiki_articles);
 
 $sub_tabs['wiki_articles'] = array(
